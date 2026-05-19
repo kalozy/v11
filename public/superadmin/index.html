@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Super Admin — Traffic Control</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#f5f6f8;--bg2:#fff;--border:#e5e7eb;--accent:#3b82f6;--text:#0f172a;--muted:#6b7280;--danger:#dc2626;--success:#16a34a}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);font-size:13px}
+.header{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 24px;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
+.header-left{display:flex;align-items:center;gap:12px}
+.logo{font-size:15px;font-weight:800;color:var(--text);letter-spacing:-0.3px}
+.admin-badge{background:#fef3c7;color:#92400e;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;text-transform:uppercase;letter-spacing:.5px}
+.main{max-width:1200px;margin:0 auto;padding:28px 24px}
+.section-title{font-size:20px;font-weight:700;margin-bottom:20px}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:28px}
+.kpi{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:18px 20px}
+.kpi-label{font-size:11px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}
+.kpi-value{font-size:26px;font-weight:700;letter-spacing:-0.5px}
+.kpi-value.blue{color:var(--accent)}.kpi-value.green{color:var(--success)}.kpi-value.red{color:var(--danger)}
+.table-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;overflow:hidden}
+table{width:100%;border-collapse:collapse}
+thead th{padding:10px 14px;text-align:left;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);background:#f8f9fb;border-bottom:1px solid var(--border)}
+tbody tr{border-bottom:1px solid var(--border)}
+tbody tr:last-child{border-bottom:none}
+tbody tr:hover{background:#fafbfc}
+tbody td{padding:11px 14px}
+.badge{display:inline-flex;align-items:center;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:600}
+.badge-green{background:#f0fdf4;color:var(--success)}.badge-red{background:#fef2f2;color:var(--danger)}.badge-blue{background:#eff6ff;color:var(--accent)}.badge-gray{background:#f3f4f6;color:var(--muted)}.badge-yellow{background:#fef3c7;color:#92400e}
+.btn{display:inline-flex;align-items:center;gap:5px;padding:5px 12px;border-radius:6px;font-family:'Inter',sans-serif;font-size:12px;font-weight:600;cursor:pointer;transition:all .1s;border:1px solid var(--border);background:var(--bg2);color:var(--muted)}
+.btn:hover{background:var(--bg)}
+.btn-danger{background:#fef2f2;border-color:#fca5a5;color:var(--danger)}.btn-danger:hover{background:var(--danger);color:#fff}
+.btn-primary{background:var(--accent);border-color:var(--accent);color:#fff}.btn-primary:hover{background:#2563eb}
+.btn-sm{padding:4px 10px;font-size:11px}
+.logout-btn{background:none;border:1px solid var(--border);padding:6px 14px;border-radius:7px;font-family:'Inter',sans-serif;font-size:12px;font-weight:500;cursor:pointer;color:var(--muted)}
+.logout-btn:hover{border-color:var(--danger);color:var(--danger)}
+#toast{position:fixed;bottom:20px;right:20px;background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:10px 16px;font-size:13px;font-weight:500;box-shadow:0 4px 16px rgba(0,0,0,.1);display:none;z-index:9999}
+</style>
+</head>
+<body>
+<div class="header">
+  <div class="header-left">
+    <span class="logo">⚡ Traffic Control</span>
+    <span class="admin-badge">Super Admin</span>
+  </div>
+  <button class="logout-btn" onclick="logout()">Sair</button>
+</div>
+
+<div class="main">
+  <div class="section-title">Painel Geral</div>
+
+  <div class="kpis">
+    <div class="kpi"><div class="kpi-label">Total Usuários</div><div class="kpi-value blue" id="k-users">—</div></div>
+    <div class="kpi"><div class="kpi-label">Usuários Ativos</div><div class="kpi-value green" id="k-active">—</div></div>
+    <div class="kpi"><div class="kpi-label">Bots Conectados</div><div class="kpi-value" id="k-bots">—</div></div>
+    <div class="kpi"><div class="kpi-label">Receita Total</div><div class="kpi-value green" id="k-revenue">—</div></div>
+  </div>
+
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+    <div style="font-size:15px;font-weight:700">Usuários</div>
+    <button class="btn btn-primary btn-sm" onclick="loadUsers()">↻ Atualizar</button>
+  </div>
+
+  <div class="table-card">
+    <table>
+      <thead><tr>
+        <th>ID</th><th>Nome</th><th>E-mail</th><th>Plano</th><th>Status</th>
+        <th>Bot</th><th>Leads</th><th>Cadastro</th><th>Ações</th>
+      </tr></thead>
+      <tbody id="users-tbody">
+        <tr><td colspan="9" style="text-align:center;color:var(--muted);padding:30px">Carregando...</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+function esc(s){if(!s)return'';return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+function brl(c){return'R$ '+(c/100).toFixed(2).replace('.',',')}
+function toast(msg,ok=true){const el=document.getElementById('toast');el.textContent=msg;el.style.background=ok?'#f0fdf4':'#fef2f2';el.style.color=ok?'#16a34a':'#dc2626';el.style.display='block';setTimeout(()=>el.style.display='none',3000)}
+
+async function loadStats() {
+  const d = await fetch('/admin-api/stats').then(r=>r.json()).catch(()=>({}));
+  document.getElementById('k-users').textContent   = d.totalUsers||0;
+  document.getElementById('k-active').textContent  = d.activeUsers||0;
+  document.getElementById('k-bots').textContent    = (d.connectedBots||0) + ' / ' + (d.totalBots||0);
+  document.getElementById('k-revenue').textContent = brl(d.totalRevenue||0);
+}
+
+async function loadUsers() {
+  const users = await fetch('/admin-api/users').then(r=>r.json()).catch(()=>[]);
+  const tbody = document.getElementById('users-tbody');
+  if (!users.length) { tbody.innerHTML='<tr><td colspan="9" style="text-align:center;color:var(--muted);padding:30px">Nenhum usuário cadastrado</td></tr>'; return; }
+  tbody.innerHTML = users.map(u => {
+    const planBadge = u.plan==='admin'?'<span class="badge badge-red">Admin</span>':u.plan==='pro'?'<span class="badge badge-blue">Pro</span>':'<span class="badge badge-gray">Free</span>';
+    const statusBadge = u.status==='active'?'<span class="badge badge-green">Ativo</span>':'<span class="badge badge-red">Suspenso</span>';
+    const botBadge = u.botStatus==='connected'?'<span class="badge badge-green">● Online</span>':'<span class="badge badge-gray">Offline</span>';
+    const dt = u.created_at ? new Date(u.created_at).toLocaleDateString('pt-BR') : '—';
+    return `<tr>
+      <td style="color:var(--muted)">#${u.id}</td>
+      <td style="font-weight:600">${esc(u.name)}</td>
+      <td style="color:var(--muted)">${esc(u.email)}</td>
+      <td>${planBadge}</td>
+      <td>${statusBadge}</td>
+      <td>${botBadge}</td>
+      <td>${u.botLeads||0}</td>
+      <td style="color:var(--muted)">${dt}</td>
+      <td>
+        <div style="display:flex;gap:5px;flex-wrap:wrap">
+          <select id="plan-${u.id}" onchange="updateUser(${u.id},'plan',this.value)" style="padding:3px 6px;border:1px solid var(--border);border-radius:5px;font-size:11px;font-family:'Inter',sans-serif">
+            <option value="free" ${u.plan==='free'?'selected':''}>Free</option>
+            <option value="pro" ${u.plan==='pro'?'selected':''}>Pro</option>
+            <option value="admin" ${u.plan==='admin'?'selected':''}>Admin</option>
+          </select>
+          ${u.status==='active'
+            ?`<button class="btn btn-danger btn-sm" onclick="updateUser(${u.id},'status','suspended')">Suspender</button>`
+            :`<button class="btn btn-primary btn-sm" onclick="updateUser(${u.id},'status','active')">Ativar</button>`
+          }
+          <button class="btn btn-sm" style="border-color:#fca5a5;color:var(--danger)" onclick="deleteUser(${u.id},'${esc(u.name)}')">Deletar</button>
+        </div>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+async function updateUser(id, field, value) {
+  const body = {}; body[field] = value;
+  const res = await fetch('/admin-api/users/'+id,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+  const d = await res.json();
+  if(d.ok){toast('Atualizado!');loadUsers();loadStats();}
+  else toast(d.error||'Erro',false);
+}
+
+async function deleteUser(id, name) {
+  if(!confirm('Deletar usuário "'+name+'"? Isso remove todos os dados e o bot dele.'))return;
+  const res=await fetch('/admin-api/users/'+id,{method:'DELETE'});
+  const d=await res.json();
+  if(d.ok){toast('Usuário deletado');loadUsers();loadStats();}
+  else toast(d.error||'Erro',false);
+}
+
+async function logout(){await fetch('/logout',{method:'POST'});window.location.href='/login';}
+
+loadStats();
+loadUsers();
+setInterval(()=>{loadStats();loadUsers();},30000);
+</script>
+</body>
+</html>

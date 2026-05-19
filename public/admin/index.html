@@ -1,0 +1,1635 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Traffic Control</title>
+  <link rel="icon" type="image/svg+xml" href="/static/favicon.svg">
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<!-- ── Sidebar ────────────────────────────────────────────────────────────── -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <svg class="logo-icon" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="40" height="40" rx="10" fill="#111827"/>
+      <path d="M20 6L8 11v9c0 6.627 5.149 12.84 12 14 6.851-1.16 12-7.373 12-14v-9L20 6z" fill="url(#shield-grad)" opacity="0.9"/>
+      <circle cx="20" cy="20" r="5" fill="#080b12"/>
+      <circle cx="20" cy="20" r="2.5" fill="url(#eye-grad)"/>
+      <defs>
+        <linearGradient id="shield-grad" x1="8" y1="6" x2="32" y2="34" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#3b82f6"/>
+          <stop offset="100%" stop-color="#8b5cf6"/>
+        </linearGradient>
+        <linearGradient id="eye-grad" x1="17.5" y1="17.5" x2="22.5" y2="22.5" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#60a5fa"/>
+          <stop offset="100%" stop-color="#a78bfa"/>
+        </linearGradient>
+      </defs>
+    </svg>
+    <div class="logo-text">
+      <span class="logo-name">Traffic Control</span>
+    </div>
+  </div>
+
+  <nav>
+    <!-- CLOAKING submenu -->
+    <div class="nav-item" onclick="toggleGroup('cloaking')" style="justify-content:space-between">
+      <div style="display:flex;align-items:center;gap:8px">
+        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="opacity:.65;flex-shrink:0"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        <span>Cloaking</span>
+      </div>
+      <svg id="cloaking-arrow" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" style="transition:transform .2s;opacity:.5"><path d="M19 9l-7 7-7-7"/></svg>
+    </div>
+    <div id="cloaking-group" style="overflow:hidden;max-height:0px;transition:max-height .25s ease">
+      <div class="nav-item active" data-page="campaigns" onclick="navigate('campaigns', this)" style="padding-left:28px">
+        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 3h7v7H3zm11 0h7v7h-7zM3 14h7v7H3zm11 0h7v7h-7z"/></svg>
+        <span class="nav-label">Campaigns</span>
+      </div>
+      <div class="nav-item" data-page="logs" onclick="navigate('logs', this)" style="padding-left:28px">
+        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414A1 1 0 0119 9.414V19a2 2 0 01-2 2z"/></svg>
+        <span class="nav-label">Request Log</span>
+      </div>
+    </div>
+    <!-- Bot submenu -->
+    <div class="nav-item" onclick="toggleGroup('bot')" style="justify-content:space-between">
+      <div style="display:flex;align-items:center;gap:8px">
+        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="opacity:.65;flex-shrink:0"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4M8 15h.01M16 15h.01"/></svg>
+        <span>WhatsApp Bot</span>
+      </div>
+      <svg id="bot-arrow" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" style="transition:transform .2s;opacity:.5"><path d="M19 9l-7 7-7-7"/></svg>
+    </div>
+    <div id="bot-group" style="overflow:hidden;max-height:0px;transition:max-height .25s ease">
+      <div class="nav-item" data-page="bot" data-bot-page="dashboard" onclick="navigateBot('dashboard',this)" style="padding-left:26px;font-size:12px">
+        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
+        <span class="nav-label">Dashboard</span>
+      </div>
+      <div class="nav-item" data-page="bot" data-bot-page="conversations" onclick="navigateBot('conversations',this)" style="padding-left:26px;font-size:12px">
+        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        <span class="nav-label">Conversas</span>
+      </div>
+      <div class="nav-item" data-page="bot" data-bot-page="crm" onclick="navigateBot('crm',this)" style="padding-left:26px;font-size:12px">
+        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+        <span class="nav-label">CRM</span>
+      </div>
+      <div class="nav-item" data-page="bot" data-bot-page="campanhas" onclick="navigateBot('campanhas',this)" style="padding-left:26px;font-size:12px">
+        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 8h1a4 4 0 010 8h-1M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8zM6 1v3M10 1v3M14 1v3"/></svg>
+        <span class="nav-label">Campanhas</span>
+      </div>
+      <div class="nav-item" data-page="bot" data-bot-page="remarketing" onclick="navigateBot('remarketing',this)" style="padding-left:26px;font-size:12px">
+        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 1l4 4-4 4M3 11V9a4 4 0 014-4h14M7 23l-4-4 4-4M21 13v2a4 4 0 01-4 4H3"/></svg>
+        <span class="nav-label">Remarketing</span>
+      </div>
+      <div class="nav-item" data-page="bot" data-bot-page="flows" onclick="navigateBot('flows',this)" style="padding-left:26px;font-size:12px">
+        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+        <span class="nav-label">Fluxos</span>
+      </div>
+      <div class="nav-item" data-page="bot" data-bot-page="settings" onclick="navigateBot('settings',this)" style="padding-left:26px;font-size:12px">
+        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+        <span class="nav-label">Configurações</span>
+      </div>
+    </div>
+
+    <div class="nav-group-label" style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.08em;padding:12px 16px 4px;font-weight:700;">Vendas</div>
+    <div class="nav-item" data-page="payment-links" onclick="navigate('payment-links', this)">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/></svg>
+      <span class="nav-label">Links de Pagamento</span>
+    </div>
+    <div class="nav-item" data-page="faturamento" onclick="navigate('faturamento', this)">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+      <span class="nav-label">Faturamento</span>
+    </div>
+  </nav>
+</aside>
+
+<!-- ── Main ───────────────────────────────────────────────────────────────── -->
+<main class="main">
+
+  <!-- Date Nav -->
+
+
+  <!-- ── Campaigns page ─────────────────────────────────────────────────── -->
+  <div class="page active" id="page-campaigns">
+    <div class="section-header">
+      <h2 class="section-title">Campaigns</h2>
+      <button class="btn btn-primary" onclick="openCampaignModal()">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 5v14m-7-7h14"/></svg>
+        New Campaign
+      </button>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Slug / Link</th>
+            <th>Network</th>
+            <th>A/B</th>
+            <th>Status</th>
+            <th>Created</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="campaigns-tbody">
+          <tr><td colspan="7"><div class="empty-state"><p>Loading…</p></div></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ── Logs page ──────────────────────────────────────────────────────── -->
+  <div class="page" id="page-logs">
+    <div class="section-header">
+      <h2 class="section-title">Request Log</h2>
+      <button class="btn btn-ghost btn-sm" onclick="loadLogs(1)">
+        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+        Refresh
+      </button>
+    </div>
+
+    <div class="filter-bar">
+      <select class="form-control" id="log-filter-campaign" onchange="loadLogs(1)">
+        <option value="">All Campaigns</option>
+      </select>
+      <input type="date" class="form-control" id="log-filter-date" oninput="loadLogs(1)" style="max-width:160px;color-scheme:dark">
+      <button class="btn btn-sm" id="log-suspect-btn" onclick="toggleSuspects()" title="Mostra visitas aprovadas para a offer page que parecem bots de plataforma (datacenter, sem referrer, ISP suspeito)" style="background:rgba(234,179,8,.15);color:#ca8a04;border:1px solid rgba(234,179,8,.3)">
+        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 9v2m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
+        Suspects
+      </button>
+      <button class="btn btn-ghost btn-sm" onclick="clearLogFilters()">Clear</button>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Date / Time</th>
+            <th>Campaign</th>
+            <th>IP</th>
+            <th>Location</th>
+            <th>Device / OS</th>
+            <th>Browser</th>
+            <th>ISP</th>
+            <th>Dest.</th>
+            <th>Result</th>
+          </tr>
+        </thead>
+        <tbody id="logs-tbody">
+          <tr><td colspan="9"><div class="empty-state"><p>Loading…</p></div></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="pagination" id="logs-pagination"></div>
+  </div>
+
+
+  <!-- ── Bot page (embed) ──────────────────────────────────────────────────── -->
+  <div class="page" id="page-bot" style="padding:0;height:calc(100vh - 60px)">
+    <iframe id="bot-iframe" src="/bot" style="width:100%;height:100%;border:none;display:block" allow="camera;microphone"></iframe>
+  </div>
+
+  <!-- ── Payment Links page ──────────────────────────────────────────────── -->
+  <div class="page" id="page-payment-links">
+    <div class="section-header">
+      <h2 class="section-title">Links de Pagamento</h2>
+      <button class="btn btn-primary" onclick="openPayLinkModal()">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 5v14m-7-7h14"/></svg>
+        Novo Link
+      </button>
+    </div>
+
+    <div id="paylinks-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(360px,1fr));gap:16px">
+      <div style="color:var(--text-muted);padding:40px;text-align:center;grid-column:1/-1">Carregando…</div>
+    </div>
+  </div>
+
+  <!-- ── Faturamento page ──────────────────────────────────────────────────── -->
+  <div class="page" id="page-faturamento">
+    <div class="section-header" style="margin-bottom:0">
+      <h2 class="section-title">Faturamento</h2>
+      <div style="display:flex;gap:8px;align-items:center">
+        <input type="date" id="fat-from" style="padding:6px 10px;border:1px solid var(--border);border-radius:6px;font-size:12px;background:var(--bg-2)">
+        <span style="color:var(--text-muted);font-size:12px">até</span>
+        <input type="date" id="fat-to" style="padding:6px 10px;border:1px solid var(--border);border-radius:6px;font-size:12px;background:var(--bg-2)">
+        <button class="btn btn-secondary" onclick="loadFaturamento()" style="font-size:12px;padding:6px 12px">Filtrar</button><span id="fat-live-badge" style="display:flex;align-items:center;gap:5px;font-size:11px;color:var(--success);font-weight:600"><span id="fat-live-dot" style="width:7px;height:7px;border-radius:50%;background:var(--success);animation:fatpulse 2s infinite"></span>Ao vivo</span>
+        <button class="btn btn-primary" onclick="openMetaModal()" style="font-size:12px;padding:6px 12px">
+          <svg width="13" height="13" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+          Conectar Meta
+        </button>
+      </div>
+    </div>
+
+    <!-- KPIs -->
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:20px" id="fat-kpis">
+      <div class="stat-card"><div class="stat-label">💰 Receita Aprovada</div><div class="stat-value green" id="fat-aprovado">R$ —</div><div style="font-size:10px;color:var(--text-muted);margin-top:4px" id="fat-aprovado-sub"></div></div>
+      <div class="stat-card"><div class="stat-label">⏳ Receita Pendente</div><div class="stat-value" id="fat-pendente">R$ —</div></div>
+      <div class="stat-card"><div class="stat-label">📦 Total de Pedidos</div><div class="stat-value blue" id="fat-total">—</div><div style="font-size:10px;color:var(--text-muted);margin-top:4px" id="fat-total-sub"></div></div>
+      <div class="stat-card"><div class="stat-label">📣 Gasto em Anúncio</div><div class="stat-value red" id="fat-gasto">R$ —</div><div style="font-size:10px;color:var(--text-muted);margin-top:4px" id="fat-roas"></div></div>
+    </div>
+    <!-- Origem das vendas -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px">
+      <div style="background:var(--bg-2);border:1px solid var(--border);border-radius:8px;padding:14px;display:flex;align-items:center;gap:14px">
+        <div style="font-size:28px">🔗</div>
+        <div><div style="font-size:11px;color:var(--text-muted);margin-bottom:2px">Checkout Direto</div><div style="font-size:20px;font-weight:800" id="fat-checkout-rev">R$ —</div><div style="font-size:11px;color:var(--text-muted)" id="fat-checkout-orders">— pedidos</div></div>
+      </div>
+      <div style="background:var(--bg-2);border:1px solid var(--border);border-radius:8px;padding:14px;display:flex;align-items:center;gap:14px">
+        <div style="font-size:28px">🤖</div>
+        <div><div style="font-size:11px;color:var(--text-muted);margin-bottom:2px">Via WhatsApp Bot</div><div style="font-size:20px;font-weight:800;color:#22c55e" id="fat-bot-rev">R$ —</div><div style="font-size:11px;color:var(--text-muted)" id="fat-bot-orders">— pedidos</div></div>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px">
+      <!-- Vendas recentes -->
+      <div style="background:var(--bg-2);border:1px solid var(--border);border-radius:10px;padding:18px">
+        <div style="font-size:13px;font-weight:600;margin-bottom:14px;display:flex;justify-content:space-between">
+          <span>Pedidos Recentes</span>
+          <span id="fat-conv-rate" style="font-size:11px;color:var(--text-muted)"></span>
+        </div>
+        <div id="fat-orders-list" style="font-size:12px">
+          <div style="color:var(--text-muted);text-align:center;padding:20px">Carregando…</div>
+        </div>
+      </div>
+
+      <!-- Por campanha Meta -->
+      <div style="background:var(--bg-2);border:1px solid var(--border);border-radius:10px;padding:18px">
+        <div style="font-size:13px;font-weight:600;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between">
+          <span>🎯 Campanhas Meta</span>
+          <span id="fat-meta-last" style="font-size:10px;color:var(--text-muted)"></span>
+        </div>
+        <div id="fat-campaigns-list" style="font-size:12px">
+          <div style="color:var(--text-muted);text-align:center;padding:20px">Conecte o Meta para ver dados de campanha</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Atribuição por campanha (vendas do checkout) -->
+    <div style="background:var(--bg-2);border:1px solid var(--border);border-radius:10px;padding:18px;margin-top:16px">
+      <div style="font-size:13px;font-weight:600;margin-bottom:14px">📊 Atribuição por Campanha (UTM)</div>
+      <div style="overflow-x:auto">
+        <table style="width:100%;font-size:12px;border-collapse:collapse">
+          <thead><tr style="color:var(--text-muted);border-bottom:1px solid var(--border)">
+            <th style="text-align:left;padding:6px 10px">Campanha</th>
+            <th style="text-align:left;padding:6px 10px">Fonte</th>
+            <th style="text-align:right;padding:6px 10px">Pedidos</th>
+            <th style="text-align:right;padding:6px 10px">Pagos</th>
+            <th style="text-align:right;padding:6px 10px">Receita</th>
+            <th style="text-align:right;padding:6px 10px">Taxa</th>
+          </tr></thead>
+          <tbody id="fat-attr-body">
+            <tr><td colspan="6" style="text-align:center;color:var(--text-muted);padding:20px">Carregando…</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+
+<!-- ── Payment Link Modal ──────────────────────────────────────────────────── -->
+<div class="modal-overlay" id="paylink-modal" onclick="if(event.target.id==='paylink-modal')closePayLinkModal()">
+  <div class="modal" style="max-width:660px;width:95%">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title" id="paylink-modal-title">Novo Link de Pagamento</div>
+        <div style="font-size:12px;color:var(--text-muted);margin-top:2px">Configure o produto e as integrações do seu checkout</div>
+      </div>
+      <button class="modal-close" onclick="closePayLinkModal()">×</button>
+    </div>
+    <div class="modal-body" style="padding:0">
+
+      <!-- TABS -->
+      <div style="display:flex;border-bottom:1px solid var(--border);padding:0 22px">
+        <button onclick="plTab('produto')" id="pltab-produto" style="padding:12px 16px 11px;border:none;background:none;font-family:inherit;font-size:13px;font-weight:600;color:var(--accent);border-bottom:2px solid var(--accent);cursor:pointer;margin-bottom:-1px">Produto</button>
+        <button onclick="plTab('integracoes')" id="pltab-integracoes" style="padding:12px 16px 11px;border:none;background:none;font-family:inherit;font-size:13px;font-weight:500;color:var(--text-muted);border-bottom:2px solid transparent;cursor:pointer;margin-bottom:-1px">Integrações</button>
+      </div>
+
+      <!-- TAB: Produto -->
+      <div id="pltab-content-produto" style="padding:22px">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px">
+          <div>
+            <label class="form-label">Nome do produto <span style="color:var(--danger)">*</span></label>
+            <input type="text" id="pl-produto-nome" class="form-input" placeholder="Ex: BTV 15 Premium">
+          </div>
+          <div>
+            <label class="form-label">ID interno</label>
+            <input type="text" id="pl-produto-id" class="form-input" placeholder="produto-001">
+          </div>
+        </div>
+        <div style="margin-bottom:14px">
+          <label class="form-label">Descrição curta</label>
+          <input type="text" id="pl-produto-desc" class="form-input" placeholder="Ex: Liberando todos os canais">
+        </div>
+        <div style="margin-bottom:14px">
+          <label class="form-label">URL da imagem</label>
+          <div style="display:flex;gap:8px;align-items:flex-start">
+            <input type="url" id="pl-produto-imagem" class="form-input" placeholder="https://i.imgur.com/..." oninput="plPreviewImg()">
+            <img id="pl-img-preview" src="" style="width:42px;height:42px;border-radius:8px;object-fit:cover;border:1px solid var(--border);display:none;flex-shrink:0">
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:14px">
+          <div>
+            <label class="form-label">Preço à vista (R$) <span style="color:var(--danger)">*</span></label>
+            <input type="number" id="pl-preco-1x" class="form-input" placeholder="37.90" step="0.01">
+          </div>
+          <div>
+            <label class="form-label">Preço 2× (R$)</label>
+            <input type="number" id="pl-preco-2x" class="form-input" placeholder="18.95" step="0.01">
+          </div>
+          <div>
+            <label class="form-label">Status</label>
+            <select id="pl-status" class="form-select">
+              <option value="1">Ativo</option>
+              <option value="0">Inativo</option>
+            </select>
+          </div>
+        </div>
+        <div>
+          <label class="form-label">Slug da URL <span style="font-size:11px;font-weight:400;color:var(--text-muted)">(deixe vazio para gerar automaticamente)</span></label>
+          <div style="display:flex;gap:8px;align-items:center">
+            <span style="font-size:12px;color:var(--text-muted);white-space:nowrap">/pay/</span>
+            <input type="text" id="pl-slug" class="form-input" placeholder="meu-produto">
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB: Integrações -->
+      <div id="pltab-content-integracoes" style="padding:22px;display:none">
+        <div style="background:var(--accent-glow);border:1px solid rgba(59,130,246,0.2);border-radius:8px;padding:11px 14px;margin-bottom:18px;font-size:12px;color:var(--accent);line-height:1.6">
+          Deixe em branco os campos que não utiliza. Todas as integrações são opcionais.
+        </div>
+
+        <div style="margin-bottom:18px">
+          <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--text-muted);margin-bottom:10px;display:flex;align-items:center;gap:6px">
+            <span style="width:18px;height:18px;background:var(--success-bg);border-radius:4px;display:inline-flex;align-items:center;justify-content:center;font-size:10px">💸</span> PIX via Woovi
+          </div>
+          <input type="text" id="pl-woovi" class="form-input" placeholder="Client_Id_xxx:Client_Secret_xxx">
+        </div>
+
+        <div style="margin-bottom:18px">
+          <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--text-muted);margin-bottom:10px;display:flex;align-items:center;gap:6px">
+            <span style="width:18px;height:18px;background:var(--accent-glow);border-radius:4px;display:inline-flex;align-items:center;justify-content:center;font-size:10px">📡</span> Facebook / Meta
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+            <div>
+              <label class="form-label">Pixel ID</label>
+              <input type="text" id="pl-pixel" class="form-input" placeholder="496302279464410">
+            </div>
+            <div>
+              <label class="form-label">Access Token (CAPI)</label>
+              <input type="text" id="pl-meta-token" class="form-input" placeholder="EAAxxxxxxx...">
+            </div>
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+          <div>
+            <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--text-muted);margin-bottom:10px;display:flex;align-items:center;gap:6px">
+              <span style="width:18px;height:18px;background:var(--purple-bg);border-radius:4px;display:inline-flex;align-items:center;justify-content:center;font-size:10px">📊</span> UTMify
+            </div>
+            <input type="text" id="pl-utmify" class="form-input" placeholder="Token UTMify">
+          </div>
+          <div>
+            <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--text-muted);margin-bottom:10px;display:flex;align-items:center;gap:6px">
+              <span style="width:18px;height:18px;background:var(--success-bg);border-radius:4px;display:inline-flex;align-items:center;justify-content:center;font-size:10px">💬</span> WhatsApp Suporte
+            </div>
+            <input type="text" id="pl-whatsapp" class="form-input" placeholder="5511999999999">
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closePayLinkModal()">Cancelar</button>
+      <button class="btn btn-primary" onclick="savePayLink()" style="min-width:120px">Salvar link</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── Meta Config Modal ──────────────────────────────────────────────────── -->
+<div class="modal-overlay" id="meta-config-modal" onclick="if(event.target.id==='meta-config-modal')closeMetaModal()">
+  <div class="modal" style="max-width:460px;width:95%">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title">Conectar Meta Ads</div>
+        <div style="font-size:12px;color:var(--text-muted);margin-top:2px">Visualize gastos e calcule ROAS por campanha</div>
+      </div>
+      <button class="modal-close" onclick="closeMetaModal()">×</button>
+    </div>
+    <div class="modal-body" style="padding:22px">
+      <div style="display:flex;align-items:flex-start;gap:12px;background:var(--bg-3);border-radius:10px;padding:14px;margin-bottom:20px">
+        <span style="font-size:22px;flex-shrink:0">📘</span>
+        <div style="font-size:12px;color:var(--text-muted);line-height:1.7">
+          Gere o token em <strong style="color:var(--text)">business.facebook.com</strong> → Configurações → Acesso à API → Marketing API
+        </div>
+      </div>
+      <div style="margin-bottom:14px">
+        <label class="form-label">Access Token</label>
+        <input type="text" id="meta-access-token" class="form-input" placeholder="EAAxxxxxxxxxxxxxxx">
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div>
+          <label class="form-label">ID da Conta <span style="font-size:11px;font-weight:400;color:var(--text-muted)">(sem act_)</span></label>
+          <input type="text" id="meta-ad-account" class="form-input" placeholder="123456789">
+        </div>
+        <div>
+          <label class="form-label">Pixel ID <span style="font-size:11px;font-weight:400;color:var(--text-muted)">(opcional)</span></label>
+          <input type="text" id="meta-pixel-id-cfg" class="form-input" placeholder="496302...">
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeMetaModal()">Cancelar</button>
+      <button class="btn btn-primary" onclick="saveMetaConfig()">Salvar conexão</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- ── Launch Profile Modal ────────────────────────────────────────────────── -->
+
+<!-- ── Campaign Modal ──────────────────────────────────────────────────────── -->
+<div class="modal-overlay" id="campaign-modal" onclick="closeModalOnOverlay(event)">
+  <div class="modal" style="max-width:680px;width:95%">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title" id="modal-title">Nova Campanha</div>
+        <div style="font-size:12px;color:var(--text-muted);margin-top:2px">Configure redirecionamento, filtros e proteção</div>
+      </div>
+      <button class="modal-close" onclick="closeModal()">×</button>
+    </div>
+
+    <form id="campaign-form" onsubmit="submitCampaign(event)">
+      <input type="hidden" id="campaign-id">
+
+      <div class="modal-body" style="padding:0">
+
+        <!-- TABS -->
+        <div style="display:flex;border-bottom:1px solid var(--border);padding:0 22px">
+          <button type="button" onclick="campTab('geral')" id="camptab-geral" style="padding:12px 16px 11px;border:none;background:none;font-family:inherit;font-size:13px;font-weight:600;color:var(--accent);border-bottom:2px solid var(--accent);cursor:pointer;margin-bottom:-1px">Geral</button>
+          <button type="button" onclick="campTab('filtros')" id="camptab-filtros" style="padding:12px 16px 11px;border:none;background:none;font-family:inherit;font-size:13px;font-weight:500;color:var(--text-muted);border-bottom:2px solid transparent;cursor:pointer;margin-bottom:-1px">Filtros</button>
+          <button type="button" onclick="campTab('seguranca')" id="camptab-seguranca" style="padding:12px 16px 11px;border:none;background:none;font-family:inherit;font-size:13px;font-weight:500;color:var(--text-muted);border-bottom:2px solid transparent;cursor:pointer;margin-bottom:-1px">Segurança</button>
+        </div>
+
+        <!-- TAB Geral -->
+        <div id="camptab-content-geral" style="padding:22px">
+          <div style="display:grid;grid-template-columns:1fr 160px 120px;gap:12px;margin-bottom:14px">
+            <div>
+              <label class="form-label">Nome da campanha <span style="color:var(--danger)">*</span></label>
+              <input type="text" class="form-input" id="f-name" required placeholder="Ex: Summer Sale" oninput="autoSlug()">
+            </div>
+            <div>
+              <label class="form-label">Rede</label>
+              <select class="form-select" id="f-network">
+                <option value="Facebook">Facebook</option>
+                <option value="TikTok">TikTok</option>
+                <option value="Google">Google</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+            <div>
+              <label class="form-label">Status</label>
+              <select class="form-select" id="f-status">
+                <option value="1">Ativo</option>
+                <option value="0">Inativo</option>
+              </select>
+            </div>
+          </div>
+
+          <div style="margin-bottom:14px">
+            <label class="form-label">Slug <span style="color:var(--danger)">*</span></label>
+            <div style="display:flex;align-items:center;gap:6px">
+              <span style="font-size:12px;color:var(--text-muted);white-space:nowrap">/</span>
+              <input type="text" class="form-input" id="f-slug" required placeholder="summer-sale">
+            </div>
+          </div>
+
+          <div style="margin-bottom:14px">
+            <label class="form-label">Safe Page URL <span style="color:var(--danger)">*</span> <span style="font-size:11px;font-weight:400;color:var(--text-muted)">— bots e bloqueados vão aqui</span></label>
+            <input type="url" class="form-input" id="f-safe-url" required placeholder="https://example.com/safe">
+          </div>
+
+          <div style="background:var(--bg-3);border-radius:10px;padding:16px">
+            <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--text-muted);margin-bottom:12px">Offer Pages</div>
+            <div style="margin-bottom:12px">
+              <label class="form-label">Offer URL A <span style="color:var(--danger)">*</span> <span style="font-size:11px;font-weight:400;color:var(--text-muted)">— principal</span></label>
+              <input type="url" class="form-input" id="f-offer-url" required placeholder="https://example.com/offer">
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+              <span style="font-size:12px;font-weight:500;color:var(--text-dim)">Habilitar Teste A/B</span>
+              <label class="toggle"><input type="checkbox" id="f-ab-enabled" onchange="toggleAbFields()"><span class="slider"></span></label>
+            </div>
+            <div id="ab-fields" style="display:none">
+              <div style="margin-bottom:10px">
+                <label class="form-label">Offer URL B <span style="font-size:11px;font-weight:400;color:var(--text-muted)">— variante</span></label>
+                <input type="url" class="form-input" id="f-offer-url-b" placeholder="https://example.com/offer-b">
+              </div>
+              <label class="form-label">Split de tráfego</label>
+              <div class="range-wrap">
+                <input type="range" id="f-ab-split" min="0" max="100" value="50" oninput="updateSplitLabel()">
+                <span class="range-label" id="ab-split-label">A 50% · B 50%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB Filtros -->
+        <div id="camptab-content-filtros" style="padding:22px;display:none">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px">
+            <div>
+              <label class="form-label">Países permitidos <span style="font-size:11px;font-weight:400;color:var(--text-muted)">(vazio = todos)</span></label>
+              <div class="tag-input-wrap" id="allowed-countries-wrap" onclick="focusTagInput('allowed-countries-input')">
+                <input type="text" class="tag-input" id="allowed-countries-input" placeholder="BR + Enter" onkeydown="handleTagInput(event, 'allowed-countries')">
+              </div>
+              <input type="hidden" id="allowed-countries-data" value="[]">
+            </div>
+            <div>
+              <label class="form-label">Países bloqueados</label>
+              <div class="tag-input-wrap" id="blocked-countries-wrap" onclick="focusTagInput('blocked-countries-input')">
+                <input type="text" class="tag-input" id="blocked-countries-input" placeholder="US + Enter" onkeydown="handleTagInput(event, 'blocked-countries')">
+              </div>
+              <input type="hidden" id="blocked-countries-data" value="[]">
+            </div>
+          </div>
+
+          <div style="margin-bottom:18px">
+            <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--text-muted);margin-bottom:10px">Qualidade de Tráfego</div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap">
+              <label style="display:flex;align-items:center;gap:6px;padding:6px 12px;background:var(--bg-3);border:1px solid var(--border);border-radius:6px;font-size:12px;cursor:pointer"><input type="checkbox" id="f-block-proxy"> Proxy</label>
+              <label style="display:flex;align-items:center;gap:6px;padding:6px 12px;background:var(--bg-3);border:1px solid var(--border);border-radius:6px;font-size:12px;cursor:pointer"><input type="checkbox" id="f-block-vpn"> VPN</label>
+              <label style="display:flex;align-items:center;gap:6px;padding:6px 12px;background:var(--bg-3);border:1px solid var(--border);border-radius:6px;font-size:12px;cursor:pointer"><input type="checkbox" id="f-block-datacenter"> Datacenter</label>
+            </div>
+          </div>
+
+          <div>
+            <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--text-muted);margin-bottom:10px">Dispositivos e OS</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+              <div>
+                <label class="form-label">Bloquear OS</label>
+                <div style="display:flex;flex-direction:column;gap:5px">
+                  <label style="display:flex;align-items:center;gap:7px;font-size:12px;cursor:pointer"><input type="checkbox" class="blocked-os" value="Windows"> Windows</label>
+                  <label style="display:flex;align-items:center;gap:7px;font-size:12px;cursor:pointer"><input type="checkbox" class="blocked-os" value="macOS"> macOS</label>
+                  <label style="display:flex;align-items:center;gap:7px;font-size:12px;cursor:pointer"><input type="checkbox" class="blocked-os" value="Android"> Android</label>
+                  <label style="display:flex;align-items:center;gap:7px;font-size:12px;cursor:pointer"><input type="checkbox" class="blocked-os" value="iOS"> iOS</label>
+                  <label style="display:flex;align-items:center;gap:7px;font-size:12px;cursor:pointer"><input type="checkbox" class="blocked-os" value="Linux"> Linux</label>
+                </div>
+              </div>
+              <div>
+                <label class="form-label">Bloquear dispositivo</label>
+                <div style="display:flex;flex-direction:column;gap:5px">
+                  <label style="display:flex;align-items:center;gap:7px;font-size:12px;cursor:pointer"><input type="checkbox" class="blocked-devices" value="mobile"> Mobile</label>
+                  <label style="display:flex;align-items:center;gap:7px;font-size:12px;cursor:pointer"><input type="checkbox" class="blocked-devices" value="desktop"> Desktop</label>
+                  <label style="display:flex;align-items:center;gap:7px;font-size:12px;cursor:pointer"><input type="checkbox" class="blocked-devices" value="tablet"> Tablet</label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB Segurança -->
+        <div id="camptab-content-seguranca" style="padding:22px;display:none">
+          <div style="margin-bottom:20px">
+            <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--text-muted);margin-bottom:10px">Proteção contra Bots</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+              <label style="display:flex;align-items:center;gap:7px;padding:8px 12px;background:var(--bg-3);border:1px solid var(--border);border-radius:7px;font-size:12px;cursor:pointer"><input type="checkbox" id="f-block-empty-ua"> UA vazio</label>
+              <label style="display:flex;align-items:center;gap:7px;padding:8px 12px;background:var(--bg-3);border:1px solid var(--border);border-radius:7px;font-size:12px;cursor:pointer"><input type="checkbox" id="f-block-no-language"> Sem idioma</label>
+              <label style="display:flex;align-items:center;gap:7px;padding:8px 12px;background:var(--bg-3);border:1px solid var(--border);border-radius:7px;font-size:12px;cursor:pointer"><input type="checkbox" id="f-block-headless"> Headless/Scripts</label>
+              <label style="display:flex;align-items:center;gap:7px;padding:8px 12px;background:var(--bg-3);border:1px solid var(--border);border-radius:7px;font-size:12px;cursor:pointer"><input type="checkbox" id="f-block-known-bots"> Bots conhecidos</label>
+              <label style="display:flex;align-items:center;gap:7px;padding:8px 12px;background:var(--bg-3);border:1px solid var(--border);border-radius:7px;font-size:12px;cursor:pointer"><input type="checkbox" id="f-block-spy-tools"> Ad Spy Tools</label>
+              <label style="display:flex;align-items:center;gap:7px;padding:8px 12px;background:var(--bg-3);border:1px solid var(--border);border-radius:7px;font-size:12px;cursor:pointer" title="Meta, Google, TikTok, Amazon..."><input type="checkbox" id="f-block-ad-platform-isps"> ISPs de plataformas ⚡</label>
+              <label style="display:flex;align-items:center;gap:7px;padding:8px 12px;background:var(--bg-3);border:1px solid var(--border);border-radius:7px;font-size:12px;cursor:pointer"><input type="checkbox" id="f-block-no-referrer"> Sem Referrer</label>
+            </div>
+          </div>
+
+          <div style="background:var(--bg-3);border-radius:10px;padding:16px">
+            <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--text-muted);margin-bottom:12px">Token de Segurança</div>
+            <div style="font-size:12px;color:var(--text-muted);margin-bottom:12px;line-height:1.6">Exige parâmetro secreto na URL. Sem ele, vai para a safe page. Ex: <code style="color:var(--accent);background:var(--accent-glow);padding:1px 5px;border-radius:3px">/slug?tk=meu-token</code></div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+              <div>
+                <label class="form-label">Nome do parâmetro <span style="font-size:11px;font-weight:400">(ex: tk, sid)</span></label>
+                <input type="text" class="form-input" id="f-token-param" placeholder="vazio = desativado">
+              </div>
+              <div>
+                <label class="form-label">Valor esperado <span style="font-size:11px;font-weight:400">(opcional)</span></label>
+                <input type="text" class="form-input" id="f-token-value" placeholder="qualquer valor aceite se vazio">
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancelar</button>
+        <button type="submit" class="btn btn-primary" id="submit-btn" style="min-width:140px">Criar Campanha</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+
+
+<script>
+// ── State ─────────────────────────────────────────────────────────────────────
+let currentPage  = 'campaigns';
+let logsPage     = 1;
+let editingId    = null;
+let logRows      = [];
+let statsDate    = new Date().toISOString().slice(0, 10);
+let suspectMode  = false;
+
+// ── Navigation ────────────────────────────────────────────────────────────────
+function navigate(page, el) {
+  if (page === 'payment-links') loadPayLinks();
+  if (page === 'faturamento') { loadFaturamento(); setTimeout(startFaturamentoLive, 500); }
+  else stopFaturamentoLive();
+  // Auto-open Cloaking submenu when navigating to its children
+  if (page === 'campaigns' || page === 'logs') {
+    const cg = document.getElementById('cloaking-group');
+    if (cg && cg.style.maxHeight === '0px') toggleGroup('cloaking');
+  }
+  if (page === 'bot') {
+    const iframe = document.getElementById('bot-iframe');
+    if (iframe && (!iframe.src || iframe.src === 'about:blank')) iframe.src = '/bot';
+    return; // don't deactivate bot subitems
+  }
+  // clear bot subitems when leaving bot section
+  document.querySelectorAll('.nav-item[data-bot-page]').forEach(n => n.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  el.classList.add('active');
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + page).classList.add('active');
+  currentPage = page;
+  if (page === 'campaigns') loadCampaigns();
+  if (page === 'logs') { populateLogFilter(); loadLogs(1); }
+}
+
+// ── API helper ────────────────────────────────────────────────────────────────
+async function api(method, path, body) {
+  const opts = { method, headers: { 'Content-Type': 'application/json' } };
+  if (body !== undefined) opts.body = JSON.stringify(body);
+  const res  = await fetch('/api' + path, opts);
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || 'API error');
+  return data;
+}
+
+// ── Toast ─────────────────────────────────────────────────────────────────────
+function toast(msg, type = 'success') {
+  const el = document.createElement('div');
+  el.className = 'toast ' + type;
+  el.innerHTML = (type === 'success' ? '✓' : '✕') + ' ' + msg;
+  document.getElementById('toast-container').appendChild(el);
+  setTimeout(() => el.remove(), 3500);
+}
+
+// ── Stats ─────────────────────────────────────────────────────────────────────
+async function loadStats(date) {
+  try {
+    const d = date || statsDate;
+    const s = await api('GET', '/stats?date=' + d);
+    document.getElementById('stat-total').textContent    = s.total;
+    document.getElementById('stat-approved').textContent = s.approved;
+    document.getElementById('stat-blocked').textContent  = s.blocked;
+    document.getElementById('stat-rate').textContent     = s.approval_rate + '%';
+    document.getElementById('stat-offer-a').textContent  = s.offer_a;
+    document.getElementById('stat-offer-b').textContent  = s.offer_b;
+
+    const today = new Date().toISOString().slice(0, 10);
+    const yesterday = new Date(Date.now() - 86400000).toISOString().slice(0, 10);
+    let label = d;
+    if (d === today) label = 'Today';
+    else if (d === yesterday) label = 'Yesterday';
+    document.getElementById('stat-date-label').textContent = label;
+  } catch (e) { console.warn('stats error', e); }
+}
+
+function setStatsDate(preset, btn, customDate) {
+  document.querySelectorAll('.stats-date-nav button').forEach(b => b.classList.remove('active'));
+
+  if (preset === 'today') {
+    statsDate = new Date().toISOString().slice(0, 10);
+    document.getElementById('stats-date-picker').value = '';
+    if (btn) btn.classList.add('active');
+  } else if (preset === 'yesterday') {
+    statsDate = new Date(Date.now() - 86400000).toISOString().slice(0, 10);
+    document.getElementById('stats-date-picker').value = '';
+    if (btn) btn.classList.add('active');
+  } else if (preset === 'custom' && customDate) {
+    statsDate = customDate;
+  }
+
+  loadStats(statsDate);
+}
+
+// ── Campaigns ─────────────────────────────────────────────────────────────────
+async function loadCampaigns() {
+  const tbody = document.getElementById('campaigns-tbody');
+  tbody.innerHTML = '<tr><td colspan="7"><div class="empty-state"><p>Loading…</p></div></td></tr>';
+  try {
+    const campaigns = await api('GET', '/campaigns');
+    if (!campaigns.length) {
+      tbody.innerHTML = '<tr><td colspan="7"><div class="empty-state"><p>No campaigns yet. Create your first one!</p></div></td></tr>';
+      return;
+    }
+    tbody.innerHTML = campaigns.map(c => {
+      const abEnabled = c.filters && c.filters.ab_enabled && c.offer_url_b;
+      const abBadge   = abEnabled
+        ? `<span class="badge badge-purple">A/B ${c.filters.ab_split ?? 50}% · ${100 - (c.filters.ab_split ?? 50)}%</span>`
+        : `<span class="badge badge-gray">—</span>`;
+      return `
+      <tr>
+        <td><strong style="color:var(--text)">${esc(c.name)}</strong></td>
+        <td>
+          <code style="font-size:12px;color:var(--accent)">/${esc(c.slug)}</code>
+          <button onclick="copySlug('${esc(c.slug)}')" style="background:none;border:none;cursor:pointer;color:var(--text-muted);margin-left:4px;font-size:11px" title="Copy link">📋</button>
+        </td>
+        <td><span class="badge ${networkBadge(c.network)}">${esc(c.network)}</span></td>
+        <td>${abBadge}</td>
+        <td>
+          <label class="toggle">
+            <input type="checkbox" ${c.status ? 'checked' : ''} onchange="toggleStatus(${c.id}, this.checked)">
+            <span class="slider"></span>
+          </label>
+        </td>
+        <td style="color:var(--text-muted)">${formatDate(c.created_at)}</td>
+        <td>
+          <button class="btn btn-ghost btn-sm" onclick="editCampaign(${c.id})">Edit</button>
+          <button class="btn btn-ghost btn-sm" onclick="duplicateCampaign(${c.id}, '${esc(c.name)}')" title="Duplicate campaign">Copy</button>
+          <button class="btn btn-danger btn-sm" onclick="deleteCampaign(${c.id}, '${esc(c.name)}')">Delete</button>
+        </td>
+      </tr>`;
+    }).join('');
+  } catch (e) {
+    tbody.innerHTML = `<tr><td colspan="7"><div class="empty-state"><p>Error: ${esc(e.message)}</p></div></td></tr>`;
+  }
+}
+
+function networkBadge(n) {
+  if (n === 'Facebook') return 'badge-blue';
+  if (n === 'TikTok')   return 'badge-red';
+  if (n === 'Google')   return 'badge-yellow';
+  return 'badge-gray';
+}
+
+async function toggleStatus(id, checked) {
+  try {
+    await api('PUT', '/campaigns/' + id, { status: checked ? 1 : 0 });
+    toast(checked ? 'Campaign activated' : 'Campaign deactivated');
+  } catch (e) { toast(e.message, 'error'); loadCampaigns(); }
+}
+
+async function duplicateCampaign(id, name) {
+  try {
+    await api('POST', '/campaigns/' + id + '/duplicate');
+    toast('Campaign duplicated! (inactive by default)');
+    loadCampaigns();
+  } catch (e) { toast(e.message, 'error'); }
+}
+
+async function deleteCampaign(id, name) {
+  if (!confirm(`Delete campaign "${name}"? This cannot be undone.`)) return;
+  try {
+    await api('DELETE', '/campaigns/' + id);
+    toast('Campaign deleted');
+    loadCampaigns();
+  } catch (e) { toast(e.message, 'error'); }
+}
+
+async function editCampaign(id) {
+  try {
+    const c = await api('GET', '/campaigns/' + id);
+    editingId = id;
+    document.getElementById('modal-title').textContent = 'Edit Campaign';
+    document.getElementById('submit-btn').textContent  = 'Save Changes';
+    document.getElementById('campaign-id').value       = id;
+    document.getElementById('f-name').value            = c.name;
+    document.getElementById('f-network').value         = c.network;
+    document.getElementById('f-slug').value            = c.slug;
+    document.getElementById('f-status').value          = c.status ? '1' : '0';
+    document.getElementById('f-safe-url').value        = c.safe_url;
+    document.getElementById('f-offer-url').value       = c.offer_url;
+    document.getElementById('f-offer-url-b').value     = c.offer_url_b || '';
+
+    const f = c.filters || {};
+    document.getElementById('f-token-param').value          = f.token_param || '';
+    document.getElementById('f-token-value').value          = f.token_value || '';
+    document.getElementById('f-block-proxy').checked            = !!f.block_proxy;
+    document.getElementById('f-block-vpn').checked              = !!f.block_vpn;
+    document.getElementById('f-block-datacenter').checked       = !!f.block_datacenter;
+    document.getElementById('f-block-empty-ua').checked         = !!f.block_empty_ua;
+    document.getElementById('f-block-no-language').checked      = !!f.block_no_language;
+    document.getElementById('f-block-headless').checked         = !!f.block_headless;
+    document.getElementById('f-block-known-bots').checked       = !!f.block_known_bots;
+    document.getElementById('f-block-spy-tools').checked        = !!f.block_spy_tools;
+    document.getElementById('f-block-ad-platform-isps').checked = !!f.block_ad_platform_isps;
+    document.getElementById('f-block-no-referrer').checked      = !!f.block_no_referrer;
+
+    // A/B
+    const abEnabled = !!f.ab_enabled;
+    document.getElementById('f-ab-enabled').checked = abEnabled;
+    document.getElementById('f-ab-split').value     = f.ab_split !== undefined ? f.ab_split : 50;
+    updateSplitLabel();
+    document.getElementById('ab-fields').classList.toggle('visible', abEnabled);
+
+    setTags('allowed-countries', f.allowed_countries || []);
+    setTags('blocked-countries', f.blocked_countries || []);
+
+    document.querySelectorAll('.blocked-os').forEach(cb => {
+      cb.checked = (f.blocked_os || []).includes(cb.value);
+    });
+    document.querySelectorAll('.blocked-devices').forEach(cb => {
+      cb.checked = (f.blocked_devices || []).includes(cb.value);
+    });
+
+    openModal();
+  } catch (e) { toast(e.message, 'error'); }
+}
+
+// ── A/B helpers ───────────────────────────────────────────────────────────────
+function toggleAbFields() {
+  const enabled = document.getElementById('f-ab-enabled').checked;
+  document.getElementById('ab-fields').classList.toggle('visible', enabled);
+}
+
+function updateSplitLabel() {
+  const a = parseInt(document.getElementById('f-ab-split').value);
+  document.getElementById('ab-split-label').textContent = `A ${a}% · B ${100 - a}%`;
+}
+
+// ── Campaign form ─────────────────────────────────────────────────────────────
+function openCampaignModal() {
+  editingId = null;
+  document.getElementById('modal-title').textContent = 'New Campaign';
+  document.getElementById('submit-btn').textContent  = 'Create Campaign';
+  document.getElementById('campaign-form').reset();
+  document.getElementById('campaign-id').value   = '';
+  document.getElementById('f-token-param').value = '';
+  document.getElementById('f-token-value').value = '';
+  document.getElementById('ab-fields').classList.remove('visible');
+  document.getElementById('f-ab-split').value = 50;
+  updateSplitLabel();
+  setTags('allowed-countries', []);
+  setTags('blocked-countries', []);
+  openModal();
+}
+
+function openModal()  { document.getElementById('campaign-modal').classList.add('open'); }
+function closeModal() { document.getElementById('campaign-modal').classList.remove('open'); }
+function closeModalOnOverlay(e) { if (e.target.id === 'campaign-modal') closeModal(); }
+
+function autoSlug() {
+  if (editingId) return;
+  document.getElementById('f-slug').value = slugify(document.getElementById('f-name').value);
+}
+
+function slugify(str) {
+  return str.toLowerCase().trim()
+    .replace(/[\s_]+/g, '-')
+    .replace(/[^\w-]+/g, '')
+    .replace(/--+/g, '-')
+    .replace(/^-+|-+$/g, '');
+}
+
+async function submitCampaign(e) {
+  e.preventDefault();
+
+  const allowedCountries = JSON.parse(document.getElementById('allowed-countries-data').value || '[]');
+  const blockedCountries = JSON.parse(document.getElementById('blocked-countries-data').value || '[]');
+  const blockedOs      = [...document.querySelectorAll('.blocked-os:checked')].map(cb => cb.value);
+  const blockedDevices = [...document.querySelectorAll('.blocked-devices:checked')].map(cb => cb.value);
+  const abEnabled      = document.getElementById('f-ab-enabled').checked;
+  const abSplit        = parseInt(document.getElementById('f-ab-split').value);
+
+  const payload = {
+    name:        document.getElementById('f-name').value,
+    network:     document.getElementById('f-network').value,
+    slug:        document.getElementById('f-slug').value,
+    status:      parseInt(document.getElementById('f-status').value),
+    safe_url:    document.getElementById('f-safe-url').value,
+    offer_url:   document.getElementById('f-offer-url').value,
+    offer_url_b: document.getElementById('f-offer-url-b').value.trim() || null,
+    filters: {
+      token_param:       document.getElementById('f-token-param').value.trim(),
+      token_value:       document.getElementById('f-token-value').value.trim(),
+      allowed_countries: allowedCountries,
+      blocked_countries: blockedCountries,
+      block_proxy:            document.getElementById('f-block-proxy').checked,
+      block_vpn:              document.getElementById('f-block-vpn').checked,
+      block_datacenter:       document.getElementById('f-block-datacenter').checked,
+      block_empty_ua:         document.getElementById('f-block-empty-ua').checked,
+      block_no_language:      document.getElementById('f-block-no-language').checked,
+      block_headless:         document.getElementById('f-block-headless').checked,
+      block_known_bots:       document.getElementById('f-block-known-bots').checked,
+      block_spy_tools:        document.getElementById('f-block-spy-tools').checked,
+      block_ad_platform_isps: document.getElementById('f-block-ad-platform-isps').checked,
+      block_no_referrer:      document.getElementById('f-block-no-referrer').checked,
+      blocked_os:        blockedOs,
+      blocked_devices:   blockedDevices,
+      ab_enabled:        abEnabled,
+      ab_split:          abSplit,
+    }
+  };
+
+  try {
+    if (editingId) {
+      await api('PUT', '/campaigns/' + editingId, payload);
+      toast('Campaign updated!');
+    } else {
+      await api('POST', '/campaigns', payload);
+      toast('Campaign created!');
+    }
+    closeModal();
+    loadCampaigns();
+  } catch (err) {
+    toast(err.message, 'error');
+  }
+}
+
+// ── Logs ──────────────────────────────────────────────────────────────────────
+async function populateLogFilter() {
+  try {
+    const campaigns = await api('GET', '/campaigns');
+    const sel = document.getElementById('log-filter-campaign');
+    sel.innerHTML = '<option value="">All Campaigns</option>' +
+      campaigns.map(c => `<option value="${c.id}">${esc(c.name)}</option>`).join('');
+  } catch (_) {}
+}
+
+function clearLogFilters() {
+  document.getElementById('log-filter-campaign').value = '';
+  document.getElementById('log-filter-date').value = '';
+  suspectMode = false;
+  document.getElementById('log-suspect-btn').style.background = 'rgba(234,179,8,.15)';
+  document.getElementById('log-suspect-btn').style.color = '#ca8a04';
+  loadLogs(1);
+}
+
+function toggleSuspects() {
+  suspectMode = !suspectMode;
+  const btn = document.getElementById('log-suspect-btn');
+  if (suspectMode) {
+    btn.style.background = 'rgba(234,179,8,.4)';
+    btn.style.color = '#fbbf24';
+    btn.style.borderColor = 'rgba(234,179,8,.6)';
+  } else {
+    btn.style.background = 'rgba(234,179,8,.15)';
+    btn.style.color = '#ca8a04';
+    btn.style.borderColor = 'rgba(234,179,8,.3)';
+  }
+  loadLogs(1);
+}
+
+async function loadLogs(page) {
+  if (page) logsPage = page;
+  const tbody = document.getElementById('logs-tbody');
+  tbody.innerHTML = '<tr><td colspan="9"><div class="empty-state"><p>Loading…</p></div></td></tr>';
+
+  const campaignId = document.getElementById('log-filter-campaign').value;
+  const date       = document.getElementById('log-filter-date').value;
+  let url = `/requests?page=${logsPage}&limit=20`;
+  if (campaignId)  url += `&campaign_id=${campaignId}`;
+  if (date)        url += `&date=${date}`;
+  if (suspectMode) url += `&suspect=1`;
+
+  try {
+    const result = await api('GET', url);
+    logRows = result.data;
+
+    if (!logRows.length) {
+      tbody.innerHTML = '<tr><td colspan="9"><div class="empty-state"><p>No requests found.</p></div></td></tr>';
+      document.getElementById('logs-pagination').innerHTML = '';
+      return;
+    }
+
+    tbody.innerHTML = logRows.map((r, i) => `
+      <tr>
+        <td style="white-space:nowrap;color:var(--text-muted)">${formatDate(r.created_at)}</td>
+        <td style="color:var(--text)">${esc(r.campaign_name || '—')}</td>
+        <td style="font-family:monospace;font-size:12px;color:var(--text-muted)">${esc(r.ip || '—')}</td>
+        <td>${countryFlag(r.country)} ${esc(r.city || '')} ${esc(r.country || '')}</td>
+        <td>${deviceIcon(r.device)} ${esc(r.device || '—')} · ${esc(r.os || '—')}</td>
+        <td>${esc(r.browser || '—')}${r.browser_version ? `<small style="color:var(--text-muted)"> ${esc(r.browser_version)}</small>` : ''}</td>
+        <td style="color:var(--text-muted);max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${esc(r.isp || '')}">${esc(r.isp || '—')}</td>
+        <td>${destBadge(r.destination)}</td>
+        <td><span class="badge ${r.approved ? 'badge-green' : 'badge-red'}">${r.approved ? 'Approved' : 'Blocked'}</span></td>
+      </tr>
+    `).join('');
+
+    renderPagination(result.pagination);
+  } catch (e) {
+    tbody.innerHTML = `<tr><td colspan="9"><div class="empty-state"><p>Error: ${esc(e.message)}</p></div></td></tr>`;
+  }
+}
+
+function destBadge(dest) {
+  if (dest === 'offer_a') return '<span class="badge badge-a">Offer A</span>';
+  if (dest === 'offer_b') return '<span class="badge badge-b">Offer B</span>';
+  if (dest === 'safe')    return '<span class="badge badge-safe">Safe</span>';
+  return '<span style="color:var(--text-muted)">—</span>';
+}
+
+
+// ── Pagination ────────────────────────────────────────────────────────────────
+function renderPagination(p) {
+  const el = document.getElementById('logs-pagination');
+  if (p.pages <= 1) { el.innerHTML = ''; return; }
+
+  let html = `<button class="page-btn" onclick="loadLogs(${p.page - 1})" ${p.page <= 1 ? 'disabled' : ''}>&laquo;</button>`;
+  for (let i = Math.max(1, p.page - 2); i <= Math.min(p.pages, p.page + 2); i++) {
+    html += `<button class="page-btn ${i === p.page ? 'active' : ''}" onclick="loadLogs(${i})">${i}</button>`;
+  }
+  html += `<button class="page-btn" onclick="loadLogs(${p.page + 1})" ${p.page >= p.pages ? 'disabled' : ''}>&raquo;</button>`;
+  html += `<span class="page-info">${p.total} total</span>`;
+  el.innerHTML = html;
+}
+
+// ── Tag inputs ────────────────────────────────────────────────────────────────
+function getTags(id)       { return JSON.parse(document.getElementById(id + '-data').value || '[]'); }
+
+function setTags(id, tags) {
+  document.getElementById(id + '-data').value = JSON.stringify(tags);
+  renderTags(id, tags);
+}
+
+function removeLastTag(id) {
+  const tags = getTags(id);
+  if (!tags.length) return;
+  tags.pop();
+  setTags(id, tags);
+}
+
+function renderTags(id, tags) {
+  const wrap  = document.getElementById(id + '-wrap');
+  const input = document.getElementById(id + '-input');
+  const tagEls = tags.map(t =>
+    `<span class="tag">${t} <span class="tag-remove" onclick="removeTag('${id}','${t}')">&times;</span></span>`
+  ).join('');
+  wrap.innerHTML = tagEls;
+  wrap.appendChild(input);
+}
+
+// ── Helpers ───────────────────────────────────────────────────────────────────
+function esc(str) {
+  if (str == null) return '';
+  return String(str)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function formatDate(dt) {
+  if (!dt) return '—';
+  try {
+    return new Date(dt + 'Z').toLocaleString(undefined, { dateStyle: 'short', timeStyle: 'short' });
+  } catch { return dt; }
+}
+
+function countryFlag(code) {
+  if (!code || code === 'XX') return '🌐';
+  try {
+    return String.fromCodePoint(...[...code.toUpperCase()].map(c => 0x1F1E6 - 65 + c.charCodeAt(0)));
+  } catch { return '🌐'; }
+}
+
+function deviceIcon(d) {
+  if (d === 'mobile') return '📱';
+  if (d === 'tablet') return '⬜';
+  return '💻';
+}
+
+function copySlug(slug) {
+  const url = window.location.origin + '/' + slug;
+  navigator.clipboard.writeText(url).then(() => toast('Link copied!'));
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// PAYMENT LINKS
+// ══════════════════════════════════════════════════════════════════════════════
+
+let editingPayLinkId = null;
+
+function brl(centavos) {
+  return 'R$ ' + (centavos / 100).toFixed(2).replace('.', ',');
+}
+
+async function loadPayLinks() {
+  const grid = document.getElementById('paylinks-grid');
+  grid.innerHTML = '<div style="color:var(--text-muted);padding:40px;text-align:center;grid-column:1/-1">Carregando…</div>';
+  try {
+    const links = await api('GET', '/payment-links');
+    if (!links.length) {
+      grid.innerHTML = `<div style="color:var(--text-muted);padding:60px;text-align:center;grid-column:1/-1">
+        <div style="font-size:32px;margin-bottom:12px">🔗</div>
+        <p style="font-size:14px;margin-bottom:4px">Nenhum link de pagamento criado</p>
+        <p style="font-size:12px">Crie um link para gerar sua página de checkout personalizada.</p>
+      </div>`;
+      return;
+    }
+    grid.innerHTML = links.map(l => payLinkCard(l)).join('');
+  } catch(e) { grid.innerHTML = `<div style="color:var(--danger);padding:40px;text-align:center;grid-column:1/-1">Erro: ${esc(e.message)}</div>`; }
+}
+
+function payLinkCard(l) {
+  const url = `${location.protocol}//${location.host}/pay/${l.slug}`;
+  const badges = [
+    l.facebook_pixel_id ? '<span class="paylink-badge pb-pixel">📡 Pixel</span>' : '',
+    l.woovi_app_id      ? '<span class="paylink-badge pb-woovi">💸 Woovi</span>' : '',
+    l.utmify_token      ? '<span class="paylink-badge pb-utmify">📊 UTMify</span>' : '',
+  ].filter(Boolean).join('');
+  const statusBadge = l.status
+    ? '<span class="badge badge-green" style="font-size:10px">Ativo</span>'
+    : '<span class="badge badge-gray" style="font-size:10px">Inativo</span>';
+  return `<div class="paylink-card">
+    <div class="paylink-card-header">
+      ${l.produto_imagem ? `<img class="paylink-thumb" src="${esc(l.produto_imagem)}" onerror="this.src=''">` : '<div class="paylink-thumb" style="display:flex;align-items:center;justify-content:center;font-size:24px">🛍️</div>'}
+      <div style="flex:1;min-width:0">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+          <div class="paylink-name">${esc(l.produto_nome)}</div>
+          ${statusBadge}
+        </div>
+        ${l.produto_desc ? `<div class="paylink-desc">${esc(l.produto_desc)}</div>` : ''}
+        <div class="paylink-price">${brl(l.preco_1x)}</div>
+      </div>
+    </div>
+    <div class="paylink-badges">${badges || '<span style="font-size:11px;color:var(--text-muted)">Sem integrações configuradas</span>'}</div>
+    <div class="paylink-url" onclick="copyPayLink('${esc(url)}')" title="Clique para copiar">🔗 ${esc(url)}</div>
+    <div class="paylink-actions">
+      <button class="btn btn-ghost btn-sm" onclick="editPayLink(${l.id})">✏️ Editar</button>
+      <button class="btn btn-ghost btn-sm" onclick="copyPayLink('${esc(url)}')">📋 Copiar Link</button>
+      <a href="${esc(url)}" target="_blank" class="btn btn-ghost btn-sm" style="text-decoration:none">👁️ Visualizar</a>
+      <button class="btn btn-danger btn-sm" onclick="deletePayLink(${l.id}, '${esc(l.produto_nome)}')">Deletar</button>
+    </div>
+  </div>`;
+}
+
+function copyPayLink(url) {
+  navigator.clipboard.writeText(url).then(() => toast('Link copiado!'));
+}
+
+function openPayLinkModal(data) {
+  editingPayLinkId = data?.id || null;
+  document.getElementById('paylink-modal-title').textContent = editingPayLinkId ? 'Editar Link' : 'Novo Link de Pagamento';
+  document.getElementById('pl-produto-nome').value   = data?.produto_nome  || '';
+  document.getElementById('pl-produto-desc').value   = data?.produto_desc  || '';
+  document.getElementById('pl-produto-imagem').value = data?.produto_imagem || '';
+  document.getElementById('pl-produto-id').value     = data?.produto_id   || 'produto-001';
+  document.getElementById('pl-preco-1x').value        = data ? (data.preco_1x / 100).toFixed(2) : '';
+  document.getElementById('pl-preco-2x').value        = data ? (data.preco_2x / 100).toFixed(2) : '';
+  document.getElementById('pl-slug').value            = data?.slug          || '';
+  document.getElementById('pl-woovi').value           = data?.woovi_app_id  || '';
+  document.getElementById('pl-pixel').value           = data?.facebook_pixel_id || '';
+  document.getElementById('pl-meta-token').value      = data?.meta_access_token || '';
+  document.getElementById('pl-utmify').value          = data?.utmify_token  || '';
+  document.getElementById('pl-whatsapp').value        = data?.whatsapp_suporte || '';
+  document.getElementById('pl-status').value          = data?.status !== undefined ? (data.status ? '1' : '0') : '1';
+  document.getElementById('paylink-modal').classList.add('open');
+}
+
+async function editPayLink(id) {
+  try {
+    const data = await api('GET', '/payment-links/' + id);
+    openPayLinkModal(data);
+  } catch(e) { toast(e.message, 'error'); }
+}
+
+async function savePayLink() {
+  const body = {
+    produto_nome:      document.getElementById('pl-produto-nome').value.trim(),
+    produto_desc:      document.getElementById('pl-produto-desc').value.trim(),
+    produto_imagem:    document.getElementById('pl-produto-imagem').value.trim(),
+    produto_id:        document.getElementById('pl-produto-id').value.trim() || 'produto-001',
+    preco_1x:          Math.round(parseFloat(document.getElementById('pl-preco-1x').value.replace(',','.')) * 100) || 0,
+    preco_2x:          Math.round(parseFloat(document.getElementById('pl-preco-2x').value.replace(',','.')) * 100) || 0,
+    slug:              document.getElementById('pl-slug').value.trim(),
+    woovi_app_id:      document.getElementById('pl-woovi').value.trim(),
+    facebook_pixel_id: document.getElementById('pl-pixel').value.trim(),
+    meta_access_token: document.getElementById('pl-meta-token').value.trim(),
+    utmify_token:      document.getElementById('pl-utmify').value.trim(),
+    whatsapp_suporte:  document.getElementById('pl-whatsapp').value.trim(),
+    status:            document.getElementById('pl-status').value === '1' ? 1 : 0,
+  };
+  if (!body.produto_nome) { toast('Informe o nome do produto', 'error'); return; }
+  if (!body.preco_1x)     { toast('Informe o preço', 'error'); return; }
+  try {
+    if (editingPayLinkId) {
+      await api('PUT', '/payment-links/' + editingPayLinkId, body);
+      toast('Link atualizado!');
+    } else {
+      await api('POST', '/payment-links', body);
+      toast('Link criado!');
+    }
+    document.getElementById('paylink-modal').classList.remove('open');
+    loadPayLinks();
+  } catch(e) { toast(e.message, 'error'); }
+}
+
+async function deletePayLink(id, name) {
+  if (!confirm(`Deletar link "${name}"? Isso não pode ser desfeito.`)) return;
+  try {
+    await api('DELETE', '/payment-links/' + id);
+    toast('Link deletado');
+    loadPayLinks();
+  } catch(e) { toast(e.message, 'error'); }
+}
+
+function closePayLinkModal() { document.getElementById('paylink-modal').classList.remove('open'); }
+
+// ══════════════════════════════════════════════════════════════════════════════
+// FATURAMENTO
+// ══════════════════════════════════════════════════════════════════════════════
+
+async function loadFaturamento() {
+  const from = document.getElementById('fat-from').value;
+  const to   = document.getElementById('fat-to').value;
+  try {
+    const params = new URLSearchParams();
+    if (from) params.set('from', from);
+    if (to)   params.set('to', to);
+    const qs = params.toString() ? '?' + params.toString() : '';
+
+    const [summary, orders, byCampaign] = await Promise.all([
+      api('GET', '/orders/summary' + qs),
+      api('GET', '/orders?limit=30' + (from?'&from='+from:'') + (to?'&to='+to:'')),
+      api('GET', '/orders/by-campaign'),
+    ]);
+
+    document.getElementById('fat-aprovado').textContent     = brl(summary.paid_total || 0);
+    document.getElementById('fat-pendente').textContent     = brl(summary.pending_total || 0);
+    document.getElementById('fat-total').textContent        = summary.total_orders || 0;
+    document.getElementById('fat-checkout-rev').textContent = brl(summary.checkout_revenue || 0);
+    document.getElementById('fat-checkout-orders').textContent = (summary.checkout_orders||0) + ' pedidos';
+    document.getElementById('fat-bot-rev').textContent      = brl(summary.bot_revenue || 0);
+    document.getElementById('fat-bot-orders').textContent   = (summary.bot_orders||0) + ' pedidos';
+    const conv = summary.total_orders > 0 ? ((summary.paid_count / summary.total_orders)*100).toFixed(1) : '0.0';
+    document.getElementById('fat-conv-rate').textContent    = `Conversão: ${conv}% · ${summary.paid_count||0} pagos · ${summary.pending_count||0} pendentes`;
+    if (summary.checkout_revenue || summary.bot_revenue) {
+      document.getElementById('fat-aprovado-sub').textContent = `🔗 ${brl(summary.checkout_revenue||0)} direto · 🤖 ${brl(summary.bot_revenue||0)} bot`;
+    }
+    document.getElementById('fat-total-sub').textContent = `${summary.paid_count||0} pagos · ${summary.pending_count||0} pendentes · ${summary.failed_count||0} expirados`;
+
+    // Orders list
+    const ol = document.getElementById('fat-orders-list');
+    if (!orders.length) { ol.innerHTML = '<div style="color:var(--text-muted);text-align:center;padding:20px">Sem pedidos no período</div>'; }
+    else {
+      ol.innerHTML = orders.map(o => {
+        const cls = o.status === 'paid' ? 'fat-status-paid' : o.status === 'pending' ? 'fat-status-pending' : 'fat-status-expired';
+        const dotCls = o.status === 'paid' ? 'fat-dot-paid' : o.status === 'pending' ? 'fat-dot-pending' : 'fat-dot-expired';
+        const label = o.status === 'paid' ? 'Pago' : o.status === 'pending' ? 'Pendente' : 'Expirado';
+        const time = o.created_at ? new Date(o.created_at).toLocaleString('pt-BR', {day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}) : '';
+        return `<div class="fat-order-row ${cls}">
+          <div class="fat-dot ${dotCls}"></div>
+          <div style="flex:1;min-width:0">
+            <div style="font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(o.customer_name || o.order_id)}</div>
+            ${o.utm_campaign ? `<div style="color:var(--text-muted);font-size:10px">📣 ${esc(o.utm_campaign)}</div>` : ''}
+          </div>
+          <div style="text-align:right;flex-shrink:0">
+            <div style="font-weight:700">${brl(o.valor)}</div>
+            <div style="color:var(--text-muted);font-size:10px">${time}</div>
+          </div>
+        </div>`;
+      }).join('');
+    }
+
+    // Campaign attribution
+    const ab = document.getElementById('fat-attr-body');
+    if (!byCampaign.length) { ab.innerHTML = '<tr><td colspan="6" style="text-align:center;color:var(--text-muted);padding:20px">Sem dados de UTM nos pedidos</td></tr>'; }
+    else {
+      ab.innerHTML = byCampaign.map(r => {
+        const rate = r.total > 0 ? ((r.paid/r.total)*100).toFixed(0) : '0';
+        return `<tr style="border-bottom:1px solid var(--border)">
+          <td style="padding:7px 10px;font-weight:600">${esc(r.utm_campaign||'—')}</td>
+          <td style="padding:7px 10px;color:var(--text-muted)">${esc(r.utm_source||'—')}</td>
+          <td style="padding:7px 10px;text-align:right">${r.total}</td>
+          <td style="padding:7px 10px;text-align:right">${r.paid}</td>
+          <td style="padding:7px 10px;text-align:right;font-weight:700;color:#22c55e">${brl(r.revenue)}</td>
+          <td style="padding:7px 10px;text-align:right">${rate}%</td>
+        </tr>`;
+      }).join('');
+    }
+  } catch(e) { toast('Erro ao carregar faturamento: ' + e.message, 'error'); }
+}
+
+async function loadMetaCampaigns() {
+  const el = document.getElementById('fat-campaigns-list');
+  el.innerHTML = '<div style="color:var(--text-muted);text-align:center;padding:20px">Carregando…</div>';
+  const from = document.getElementById('fat-from').value;
+  const to   = document.getElementById('fat-to').value;
+  const qs = (from ? '?from='+from : '') + (to ? (from?'&':'?')+'to='+to : '');
+  try {
+    const data = await api('GET', '/meta/campaigns' + qs);
+    if (data.error && !data.data) { el.innerHTML = `<div style="color:var(--danger);padding:16px;font-size:12px">❌ ${esc(data.error.message || JSON.stringify(data.error))}</div>`; return; }
+    const campaigns = data.data || [];
+    if (!campaigns.length) { el.innerHTML = '<div style="color:var(--text-muted);text-align:center;padding:20px">Sem dados de campanha no período</div>'; return; }
+
+    el.innerHTML = campaigns.map(c => {
+      const spend = parseFloat(c.spend || 0);
+      const clicks = parseInt(c.clicks || 0);
+      const impressions = parseInt(c.impressions || 0);
+      const cpm = impressions > 0 ? ((spend / impressions) * 1000).toFixed(2) : '—';
+      const cpc = clicks > 0 ? (spend / clicks).toFixed(2) : '—';
+      return `<div class="meta-campaign-row">
+        <div style="flex:1;min-width:0">
+          <div style="font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(c.campaign_name)}</div>
+          <div style="font-size:10px;color:var(--text-muted);margin-top:2px">
+            ${impressions.toLocaleString('pt-BR')} impressões · ${clicks.toLocaleString('pt-BR')} cliques · CPM R$${cpm} · CPC R$${cpc}
+          </div>
+        </div>
+        <div style="text-align:right;flex-shrink:0">
+          <div style="font-weight:700;color:var(--danger)">R$ ${spend.toFixed(2).replace('.',',')}</div>
+          <div style="font-size:10px;color:var(--text-muted)">gasto</div>
+        </div>
+      </div>`;
+    }).join('');
+
+    // Update total ad spend and ROAS
+    const totalSpend = campaigns.reduce((s,c) => s + parseFloat(c.spend||0), 0);
+    document.getElementById('fat-gasto').textContent = 'R$ ' + totalSpend.toFixed(2).replace('.',',');
+    // Calculate ROAS from current summary
+    try {
+      const sumEl = document.getElementById('fat-aprovado').textContent;
+      const revStr = sumEl.replace('R$ ','').replace(',','.');
+      const rev = parseFloat(revStr) || 0;
+      if (totalSpend > 0) {
+        const roas = (rev / totalSpend).toFixed(2);
+        document.getElementById('fat-roas').textContent = `ROAS: ${roas}x`;
+        document.getElementById('fat-roas').style.color = roas >= 2 ? '#22c55e' : roas >= 1 ? '#f59e0b' : '#ef4444';
+      }
+    } catch {}
+  } catch(e) { el.innerHTML = `<div style="color:var(--danger);padding:16px;font-size:12px">Erro: ${esc(e.message)}</div>`; }
+}
+
+// Meta Config Modal
+function openMetaModal() {
+  api('GET', '/meta-config').then(cfg => {
+    document.getElementById('meta-access-token').value  = cfg.access_token  || '';
+    document.getElementById('meta-ad-account').value    = cfg.ad_account_id || '';
+    document.getElementById('meta-pixel-id-cfg').value  = cfg.pixel_id      || '';
+    document.getElementById('meta-config-modal').classList.add('open');
+  }).catch(() => document.getElementById('meta-config-modal').classList.add('open'));
+}
+
+async function saveMetaConfig() {
+  const body = {
+    access_token:  document.getElementById('meta-access-token').value.trim(),
+    ad_account_id: document.getElementById('meta-ad-account').value.trim().replace('act_',''),
+    pixel_id:      document.getElementById('meta-pixel-id-cfg').value.trim(),
+  };
+  try {
+    await api('POST', '/meta-config', body);
+    toast('Configuração Meta salva!');
+    document.getElementById('meta-config-modal').classList.remove('open');
+    loadMetaCampaigns();
+  } catch(e) { toast(e.message, 'error'); }
+}
+
+function closeMetaModal() { document.getElementById('meta-config-modal').classList.remove('open'); }
+
+// Set default date range (last 7 days) for faturamento
+(function() {
+  const today = new Date();
+  const from = new Date(today); from.setDate(from.getDate() - 6);
+  document.getElementById('fat-from').value = from.toISOString().slice(0,10);
+  document.getElementById('fat-to').value   = today.toISOString().slice(0,10);
+})();
+
+// Real-time order updates via Socket.IO
+(function() {
+  function tryConnectSocket() {
+    const s = document.createElement('script');
+    s.src = '/socket.io/socket.io.js';
+    s.onload = function() {
+      try {
+        const socket = io();
+        socket.on('order:new', function(data) {
+          // Immediate refresh without waiting for interval
+          if (isFaturamentoActive()) refreshOrdersOnly();
+          // Flash notification
+          const src = data.source === 'whatsapp_bot' ? '🤖 WhatsApp Bot' : '🔗 Checkout';
+          toast(`Novo pedido ${src} — ${brl(data.valor||0)}`, 'ok');
+          // Reload faturamento if it's open
+          if (document.getElementById('page-faturamento').classList.contains('active')) {
+            loadFaturamento();
+          }
+        });
+        socket.on('order:updated', function(data) {
+          if (isFaturamentoActive()) refreshOrdersOnly();
+          if (data.status === 'paid') {
+            const src = data.source === 'whatsapp_bot' ? '🤖 Bot' : '🔗 Checkout';
+            toast(`✅ Pagamento confirmado ${src} — ${brl(data.valor||0)}`, 'ok');
+            if (document.getElementById('page-faturamento').classList.contains('active')) {
+              loadFaturamento();
+            }
+          }
+        });
+      } catch(e) {}
+    };
+    document.body.appendChild(s);
+  }
+  setTimeout(tryConnectSocket, 1000);
+})();
+
+
+
+function navigateBot(botPage, el) {
+  // Show bot page in admin
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-bot').classList.add('active');
+  
+  // Mark all bot subitems, then activate clicked one
+  document.querySelectorAll('.nav-item[data-bot-page]').forEach(n => n.classList.remove('active'));
+  if (el) el.classList.add('active');
+
+  // Open bot submenu if closed
+  const bg = document.getElementById('bot-group');
+  if (bg && bg.style.maxHeight === '0px') toggleGroup('bot');
+
+  // Load iframe if not loaded
+  const iframe = document.getElementById('bot-iframe');
+  if (iframe) {
+    if (!iframe.src || iframe.src === 'about:blank') {
+      iframe.src = '/bot';
+      iframe.onload = function() {
+        iframe.contentWindow.postMessage({ type: 'botNavigate', page: botPage }, '*');
+      };
+    } else {
+      iframe.contentWindow.postMessage({ type: 'botNavigate', page: botPage }, '*');
+    }
+  }
+}
+
+function toggleGroup(name) {
+  const group = document.getElementById(name + '-group');
+  const arrow = document.getElementById(name + '-arrow');
+  if (!group) return;
+  const open = group.style.maxHeight !== '0px' && group.style.maxHeight !== '';
+  group.style.maxHeight = open ? '0px' : '500px';
+  if (arrow) arrow.style.transform = open ? 'rotate(0deg)' : 'rotate(180deg)';
+}
+
+
+// ══════════════════════════════════════════════════════════════════════════════
+// BROWSER PROFILE LAUNCH
+// ══════════════════════════════════════════════════════════════════════════════
+
+// Track open browser sessions per profile: fprint_id -> sessionId
+;
+
+// ── Modal tab switching ────────────────────────────────────────────────────────
+function plTab(tab) {
+  ['produto','integracoes'].forEach(t => {
+    const btn = document.getElementById('pltab-' + t);
+    const div = document.getElementById('pltab-content-' + t);
+    const active = t === tab;
+    if(btn){ btn.style.color = active ? 'var(--accent)' : 'var(--text-muted)'; btn.style.fontWeight = active ? '600' : '500'; btn.style.borderBottom = active ? '2px solid var(--accent)' : '2px solid transparent'; }
+    if(div) div.style.display = active ? '' : 'none';
+  });
+}
+
+function campTab(tab) {
+  ['geral','filtros','seguranca'].forEach(t => {
+    const btn = document.getElementById('camptab-' + t);
+    const div = document.getElementById('camptab-content-' + t);
+    const active = t === tab;
+    if(btn){ btn.style.color = active ? 'var(--accent)' : 'var(--text-muted)'; btn.style.fontWeight = active ? '600' : '500'; btn.style.borderBottom = active ? '2px solid var(--accent)' : '2px solid transparent'; }
+    if(div) div.style.display = active ? '' : 'none';
+  });
+}
+
+function plPreviewImg() {
+  const url = document.getElementById('pl-produto-imagem').value.trim();
+  const img = document.getElementById('pl-img-preview');
+  if(!img) return;
+  if(url) { img.src = url; img.style.display = ''; img.onerror = () => img.style.display = 'none'; }
+  else img.style.display = 'none';
+}
+
+
+
+
+// ── Faturamento auto-refresh ──────────────────────────────────────────────────
+let fatRefreshOrders   = null; // timer for orders (every 15s)
+let fatRefreshMeta     = null; // timer for Meta Ads (every 5min)
+let fatMetaLoading     = false;
+
+function startFaturamentoLive() {
+  stopFaturamentoLive();
+
+  // Orders + summary: refresh every 15 seconds
+  fatRefreshOrders = setInterval(async () => {
+    if (!isFaturamentoActive()) { stopFaturamentoLive(); return; }
+    await refreshOrdersOnly();
+  }, 15000);
+
+  // Meta Ads: refresh every 5 minutes (API has rate limits)
+  fatRefreshMeta = setInterval(async () => {
+    if (!isFaturamentoActive()) { stopFaturamentoLive(); return; }
+    await refreshMetaOnly();
+  }, 5 * 60 * 1000);
+}
+
+function stopFaturamentoLive() {
+  if (fatRefreshOrders) { clearInterval(fatRefreshOrders); fatRefreshOrders = null; }
+  if (fatRefreshMeta)   { clearInterval(fatRefreshMeta);   fatRefreshMeta   = null; }
+}
+
+function isFaturamentoActive() {
+  const pg = document.getElementById('page-faturamento');
+  return pg && pg.classList.contains('active');
+}
+
+async function refreshOrdersOnly() {
+  const from = document.getElementById('fat-from')?.value;
+  const to   = document.getElementById('fat-to')?.value;
+  const qs   = (from ? '?from='+from : '') + (to ? (from?'&':'?')+'to='+to : '');
+  try {
+    const [summary, orders] = await Promise.all([
+      api('GET', '/orders/summary' + qs),
+      api('GET', '/orders?limit=30' + (from?'&from='+from:'') + (to?'&to='+to:''))
+    ]);
+    // Update KPIs
+    const setEl = (id, val) => { const el=document.getElementById(id); if(el) el.textContent=val; };
+    setEl('fat-aprovado', brl(summary.paid_total||0));
+    setEl('fat-pendente', brl(summary.pending_total||0));
+    setEl('fat-total', summary.total_orders||0);
+    setEl('fat-checkout-rev', brl(summary.checkout_revenue||0));
+    setEl('fat-checkout-orders', (summary.checkout_orders||0)+' pedidos');
+    setEl('fat-bot-rev', brl(summary.bot_revenue||0));
+    setEl('fat-bot-orders', (summary.bot_orders||0)+' pedidos');
+    const conv = summary.total_orders > 0 ? ((summary.paid_count/summary.total_orders)*100).toFixed(1) : '0.0';
+    setEl('fat-conv-rate', 'Conversao: '+conv+'% · '+(summary.paid_count||0)+' pagos · '+(summary.pending_count||0)+' pendentes');
+    if (summary.checkout_revenue||summary.bot_revenue) setEl('fat-aprovado-sub', brl(summary.checkout_revenue||0)+' direto · '+brl(summary.bot_revenue||0)+' bot');
+    setEl('fat-total-sub', (summary.paid_count||0)+' pagos · '+(summary.pending_count||0)+' pendentes · '+(summary.failed_count||0)+' expirados');
+
+    // Update orders list
+    const ol = document.getElementById('fat-orders-list');
+    if (ol && orders.length) {
+      ol.innerHTML = orders.map(o => {
+        const cls = o.status==='paid'?'fat-status-paid':o.status==='pending'?'fat-status-pending':'fat-status-expired';
+        const dotCls = o.status==='paid'?'fat-dot-paid':o.status==='pending'?'fat-dot-pending':'fat-dot-expired';
+        const time = o.created_at ? new Date(o.created_at).toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}) : '';
+        const src  = o.source==='whatsapp_bot' ? '🤖' : '🔗';
+        return '<div class="fat-order-row '+cls+'"><div class="fat-dot '+dotCls+'"></div><div style="flex:1;min-width:0"><div style="font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+src+' '+esc(o.customer_name||o.order_id)+'</div>'+(o.utm_campaign?'<div style="color:var(--text-muted);font-size:10px">📣 '+esc(o.utm_campaign)+'</div>':'')+'</div><div style="text-align:right;flex-shrink:0"><div style="font-weight:700">'+brl(o.valor)+'</div><div style="color:var(--text-muted);font-size:10px">'+time+'</div></div></div>';
+      }).join('');
+    }
+
+    // Recalculate ROAS if Meta spend is loaded
+    const gastoEl = document.getElementById('fat-gasto');
+    if (gastoEl && gastoEl.textContent !== 'R$ —') {
+      const spendStr = gastoEl.textContent.replace('R$ ','').replace(',','.');
+      const spend = parseFloat(spendStr)||0;
+      const rev   = (summary.paid_total||0)/100;
+      if (spend > 0) {
+        const roas = (rev/spend).toFixed(2);
+        const roasEl = document.getElementById('fat-roas');
+        if (roasEl) { roasEl.textContent='ROAS: '+roas+'x'; roasEl.style.color=roas>=2?'var(--success)':roas>=1?'var(--warning)':'var(--danger)'; }
+      }
+    }
+  } catch {}
+}
+
+async function refreshMetaOnly() {
+  if (fatMetaLoading) return;
+  fatMetaLoading = true;
+  const from = document.getElementById('fat-from')?.value;
+  const to   = document.getElementById('fat-to')?.value;
+  const qs   = (from?'?from='+from:'') + (to?(from?'&':'?')+'to='+to:'');
+  try {
+    const data = await api('GET', '/meta/campaigns'+qs);
+    const campaigns = data.data || [];
+    if (!campaigns.length) return;
+    const totalSpend = campaigns.reduce((s,c)=>s+parseFloat(c.spend||0),0);
+    const gastoEl = document.getElementById('fat-gasto');
+    if (gastoEl) gastoEl.textContent = 'R$ '+totalSpend.toFixed(2).replace('.',',');
+    const lastEl = document.getElementById('fat-meta-last');
+    if (lastEl) lastEl.textContent = 'Atualizado '+new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+    // Update campaigns list
+    const el = document.getElementById('fat-campaigns-list');
+    if (el) {
+      el.innerHTML = campaigns.map(c => {
+        const spend=parseFloat(c.spend||0),clicks=parseInt(c.clicks||0),impressions=parseInt(c.impressions||0);
+        const cpm=impressions>0?((spend/impressions)*1000).toFixed(2):'—';
+        const cpc=clicks>0?(spend/clicks).toFixed(2):'—';
+        return '<div class="meta-campaign-row"><div style="flex:1;min-width:0"><div style="font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+esc(c.campaign_name)+'</div><div style="font-size:10px;color:var(--text-muted);margin-top:2px">'+impressions.toLocaleString('pt-BR')+' impressoes · '+clicks.toLocaleString('pt-BR')+' cliques · CPM R$'+cpm+' · CPC R$'+cpc+'</div></div><div style="text-align:right;flex-shrink:0"><div style="font-weight:700;color:var(--danger)">R$ '+spend.toFixed(2).replace('.',',')+'</div><div style="font-size:10px;color:var(--text-muted)">gasto</div></div></div>';
+      }).join('');
+    }
+    // Recalculate ROAS
+    const aprovEl = document.getElementById('fat-aprovado');
+    if (aprovEl) {
+      const rev = parseFloat(aprovEl.textContent.replace('R$ ','').replace(',','.'))||0;
+      if (totalSpend>0) {
+        const roas = (rev/totalSpend).toFixed(2);
+        const roasEl = document.getElementById('fat-roas');
+        if (roasEl) { roasEl.textContent='ROAS: '+roas+'x'; roasEl.style.color=roas>=2?'var(--success)':roas>=1?'var(--warning)':'var(--danger)'; }
+      }
+    }
+  } catch {} finally { fatMetaLoading=false; }
+}
+
+// ── Init ──────────────────────────────────────────────────────────────────────
+loadCampaigns();
+</script>
+<div id="toast-container" style="position:fixed;bottom:20px;right:20px;z-index:9999;display:flex;flex-direction:column;gap:8px;pointer-events:none"></div>
+</body>
+</html>

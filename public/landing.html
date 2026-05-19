@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Traffic Control</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&family=JetBrains+Mono:wght@400;500&display=swap');
+
+  *{box-sizing:border-box;margin:0;padding:0}
+
+  :root{
+    --bg:#03050a;
+    --bg2:#080c14;
+    --accent:#3b82f6;
+    --accent2:#6366f1;
+    --green:#22d3a8;
+    --text:#e2e8f0;
+    --muted:#64748b;
+    --border:rgba(59,130,246,0.15);
+  }
+
+  html,body{height:100%;overflow:hidden}
+
+  body{
+    font-family:'Inter',sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    display:flex;flex-direction:column;
+    align-items:center;justify-content:center;
+    min-height:100vh;
+    position:relative;
+  }
+
+  /* ── Animated grid background ── */
+  .grid-bg{
+    position:fixed;inset:0;
+    background-image:
+      linear-gradient(rgba(59,130,246,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(59,130,246,0.04) 1px, transparent 1px);
+    background-size:60px 60px;
+    animation:gridMove 20s linear infinite;
+    pointer-events:none;
+  }
+  @keyframes gridMove{from{background-position:0 0}to{background-position:60px 60px}}
+
+  /* ── Glow orbs ── */
+  .orb{position:fixed;border-radius:50%;filter:blur(100px);pointer-events:none;animation:orbFloat 8s ease-in-out infinite}
+  .orb1{width:500px;height:500px;background:rgba(59,130,246,0.08);top:-150px;left:-100px;animation-delay:0s}
+  .orb2{width:400px;height:400px;background:rgba(99,102,241,0.06);bottom:-100px;right:-100px;animation-delay:3s}
+  .orb3{width:300px;height:300px;background:rgba(34,211,168,0.05);top:50%;left:50%;transform:translate(-50%,-50%);animation-delay:1.5s}
+  @keyframes orbFloat{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-30px) scale(1.05)}}
+
+  /* ── Main content ── */
+  .wrap{position:relative;z-index:10;text-align:center;padding:20px;max-width:700px;width:100%}
+
+  /* ── Badge ── */
+  .badge{
+    display:inline-flex;align-items:center;gap:8px;
+    padding:6px 16px;
+    background:rgba(59,130,246,0.1);
+    border:1px solid rgba(59,130,246,0.25);
+    border-radius:20px;
+    font-size:11px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;
+    color:var(--accent);
+    margin-bottom:32px;
+  }
+  .badge-dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:blink 2s ease-in-out infinite}
+  @keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+
+  /* ── Logo ── */
+  .logo{
+    font-size:clamp(42px,8vw,80px);
+    font-weight:900;
+    letter-spacing:-3px;
+    line-height:1;
+    margin-bottom:6px;
+    background:linear-gradient(135deg,#e2e8f0 0%,#94a3b8 50%,#3b82f6 100%);
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+    background-clip:text;
+  }
+
+  .logo-sub{
+    font-family:'JetBrains Mono',monospace;
+    font-size:12px;font-weight:400;
+    color:var(--muted);
+    letter-spacing:4px;text-transform:uppercase;
+    margin-bottom:40px;
+  }
+
+  /* ── Description ── */
+  .desc{
+    font-size:16px;font-weight:400;
+    color:#94a3b8;
+    line-height:1.8;
+    margin-bottom:48px;
+    max-width:480px;margin-left:auto;margin-right:auto;
+  }
+
+  /* ── CTA Button ── */
+  .cta{
+    display:inline-flex;align-items:center;gap:10px;
+    padding:14px 32px;
+    background:linear-gradient(135deg,var(--accent),var(--accent2));
+    border:none;border-radius:10px;
+    color:#fff;font-family:'Inter',sans-serif;font-size:14px;font-weight:600;
+    cursor:pointer;text-decoration:none;
+    transition:all .2s;
+    box-shadow:0 0 30px rgba(59,130,246,0.3);
+    position:relative;overflow:hidden;
+  }
+  .cta::before{
+    content:'';position:absolute;inset:0;
+    background:linear-gradient(135deg,rgba(255,255,255,0.1),transparent);
+    opacity:0;transition:opacity .2s;
+  }
+  .cta:hover{transform:translateY(-2px);box-shadow:0 0 50px rgba(59,130,246,0.5)}
+  .cta:hover::before{opacity:1}
+  .cta:active{transform:translateY(0)}
+
+  .cta-icon{font-size:16px}
+
+  /* ── Floating particles ── */
+  .particles{position:fixed;inset:0;pointer-events:none;overflow:hidden}
+  .particle{
+    position:absolute;
+    width:2px;height:2px;
+    border-radius:50%;
+    background:var(--accent);
+    animation:particleFloat linear infinite;
+    opacity:0;
+  }
+  @keyframes particleFloat{
+    0%{opacity:0;transform:translateY(100vh)}
+    10%{opacity:.6}
+    90%{opacity:.3}
+    100%{opacity:0;transform:translateY(-20px)}
+  }
+
+  /* ── Scanline effect ── */
+  .scanline{
+    position:fixed;inset:0;pointer-events:none;z-index:20;
+    background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.03) 2px,rgba(0,0,0,0.03) 4px);
+  }
+</style>
+</head>
+<body>
+
+<div class="grid-bg"></div>
+<div class="orb orb1"></div>
+<div class="orb orb2"></div>
+<div class="orb orb3"></div>
+<div class="particles" id="particles"></div>
+<div class="scanline"></div>
+
+<div class="wrap">
+  <div class="badge">
+    <span class="badge-dot"></span>
+    Sistema Operacional
+  </div>
+
+  <div class="logo">Traffic Control</div>
+  <div class="logo-sub">v2.0 · Intelligent Routing</div>
+
+  <p class="desc">
+    Plataforma avançada de gestão de tráfego, automação WhatsApp e rastreamento de conversões com integração Meta Ads.
+  </p>
+
+  <a href="/admin" class="cta">
+    <span class="cta-icon">⚡</span>
+    Acessar Painel
+  </a>
+
+</div>
+
+<script>
+// ── Floating particles
+(function(){
+  const container = document.getElementById('particles');
+  for(let i=0;i<25;i++){
+    const p = document.createElement('div');
+    p.className = 'particle';
+    p.style.cssText = `
+      left:${Math.random()*100}%;
+      animation-duration:${6+Math.random()*10}s;
+      animation-delay:${Math.random()*8}s;
+      width:${1+Math.random()*2}px;
+      height:${1+Math.random()*2}px;
+      opacity:0;
+    `;
+    container.appendChild(p);
+  }
+})();
+  let current = 0;
+  const step = Math.ceil(target / 40);
+  const timer = setInterval(() => {
+    current = Math.min(current + step, target);
+    el.textContent = prefix + current.toLocaleString('pt-BR') + suffix;
+    if(current >= target) clearInterval(timer);
+  }, 30);
+}
+</script>
+</body>
+</html>
