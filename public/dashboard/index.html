@@ -219,75 +219,19 @@
         <span style="color:var(--text-muted);font-size:12px">até</span>
         <input type="date" id="fat-to" style="padding:6px 10px;border:1px solid var(--border);border-radius:6px;font-size:12px;background:var(--bg-2)">
         <button class="btn btn-secondary" onclick="loadFaturamento()" style="font-size:12px;padding:6px 12px">Filtrar</button><span id="fat-live-badge" style="display:flex;align-items:center;gap:5px;font-size:11px;color:var(--success);font-weight:600"><span id="fat-live-dot" style="width:7px;height:7px;border-radius:50%;background:var(--success);animation:fatpulse 2s infinite"></span>Ao vivo</span>
-        <button class="btn btn-primary" onclick="openMetaModal()" style="font-size:12px;padding:6px 12px">
-          <svg width="13" height="13" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
-          Conectar Meta
         </button>
       </div>
     </div>
 
     <!-- KPIs -->
     <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:20px" id="fat-kpis">
-      <div class="stat-card"><div class="stat-label">💰 Receita Aprovada</div><div class="stat-value green" id="fat-aprovado">R$ —</div><div style="font-size:10px;color:var(--text-muted);margin-top:4px" id="fat-aprovado-sub"></div></div>
+      <div class="stat-card"><div class="stat-label">💰 Receita Aprovada</div><div class="stat-value green" id="fat-aprovado">R$ —</div></div>
       <div class="stat-card"><div class="stat-label">⏳ Receita Pendente</div><div class="stat-value" id="fat-pendente">R$ —</div></div>
       <div class="stat-card"><div class="stat-label">📦 Total de Pedidos</div><div class="stat-value blue" id="fat-total">—</div><div style="font-size:10px;color:var(--text-muted);margin-top:4px" id="fat-total-sub"></div></div>
       <div class="stat-card"><div class="stat-label">📣 Gasto em Anúncio</div><div class="stat-value red" id="fat-gasto">R$ —</div><div style="font-size:10px;color:var(--text-muted);margin-top:4px" id="fat-roas"></div></div>
     </div>
     <!-- Origem das vendas -->
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px">
-      <div style="background:var(--bg-2);border:1px solid var(--border);border-radius:8px;padding:14px;display:flex;align-items:center;gap:14px">
-        <div style="font-size:28px">🔗</div>
-        <div><div style="font-size:11px;color:var(--text-muted);margin-bottom:2px">Checkout Direto</div><div style="font-size:20px;font-weight:800" id="fat-checkout-rev">R$ —</div><div style="font-size:11px;color:var(--text-muted)" id="fat-checkout-orders">— pedidos</div></div>
-      </div>
-      <div style="background:var(--bg-2);border:1px solid var(--border);border-radius:8px;padding:14px;display:flex;align-items:center;gap:14px">
-        <div style="font-size:28px">🤖</div>
-        <div><div style="font-size:11px;color:var(--text-muted);margin-bottom:2px">Via WhatsApp Bot</div><div style="font-size:20px;font-weight:800;color:#22c55e" id="fat-bot-rev">R$ —</div><div style="font-size:11px;color:var(--text-muted)" id="fat-bot-orders">— pedidos</div></div>
-      </div>
-    </div>
-
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px">
-      <!-- Vendas recentes -->
-      <div style="background:var(--bg-2);border:1px solid var(--border);border-radius:10px;padding:18px">
-        <div style="font-size:13px;font-weight:600;margin-bottom:14px;display:flex;justify-content:space-between">
-          <span>Pedidos Recentes</span>
-          <span id="fat-conv-rate" style="font-size:11px;color:var(--text-muted)"></span>
-        </div>
-        <div id="fat-orders-list" style="font-size:12px">
-          <div style="color:var(--text-muted);text-align:center;padding:20px">Carregando…</div>
-        </div>
-      </div>
-
-      <!-- Por campanha Meta -->
-      <div style="background:var(--bg-2);border:1px solid var(--border);border-radius:10px;padding:18px">
-        <div style="font-size:13px;font-weight:600;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between">
-          <span>🎯 Campanhas Meta</span>
-          <span id="fat-meta-last" style="font-size:10px;color:var(--text-muted)"></span>
-        </div>
-        <div id="fat-campaigns-list" style="font-size:12px">
-          <div style="color:var(--text-muted);text-align:center;padding:20px">Conecte o Meta para ver dados de campanha</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Atribuição por campanha (vendas do checkout) -->
-    <div style="background:var(--bg-2);border:1px solid var(--border);border-radius:10px;padding:18px;margin-top:16px">
-      <div style="font-size:13px;font-weight:600;margin-bottom:14px">📊 Atribuição por Campanha (UTM)</div>
-      <div style="overflow-x:auto">
-        <table style="width:100%;font-size:12px;border-collapse:collapse">
-          <thead><tr style="color:var(--text-muted);border-bottom:1px solid var(--border)">
-            <th style="text-align:left;padding:6px 10px">Campanha</th>
-            <th style="text-align:left;padding:6px 10px">Fonte</th>
-            <th style="text-align:right;padding:6px 10px">Pedidos</th>
-            <th style="text-align:right;padding:6px 10px">Pagos</th>
-            <th style="text-align:right;padding:6px 10px">Receita</th>
-            <th style="text-align:right;padding:6px 10px">Taxa</th>
-          </tr></thead>
-          <tbody id="fat-attr-body">
-            <tr><td colspan="6" style="text-align:center;color:var(--text-muted);padding:20px">Carregando…</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
+    
   </div>
 
 </main>
@@ -409,45 +353,6 @@
     <div class="modal-footer">
       <button class="btn btn-secondary" onclick="closePayLinkModal()">Cancelar</button>
       <button class="btn btn-primary" onclick="savePayLink()" style="min-width:120px">Salvar link</button>
-    </div>
-  </div>
-</div>
-
-<!-- ── Meta Config Modal ──────────────────────────────────────────────────── -->
-<div class="modal-overlay" id="meta-config-modal" onclick="if(event.target.id==='meta-config-modal')closeMetaModal()">
-  <div class="modal" style="max-width:460px;width:95%">
-    <div class="modal-header">
-      <div>
-        <div class="modal-title">Conectar Meta Ads</div>
-        <div style="font-size:12px;color:var(--text-muted);margin-top:2px">Visualize gastos e calcule ROAS por campanha</div>
-      </div>
-      <button class="modal-close" onclick="closeMetaModal()">×</button>
-    </div>
-    <div class="modal-body" style="padding:22px">
-      <div style="display:flex;align-items:flex-start;gap:12px;background:var(--bg-3);border-radius:10px;padding:14px;margin-bottom:20px">
-        <span style="font-size:22px;flex-shrink:0">📘</span>
-        <div style="font-size:12px;color:var(--text-muted);line-height:1.7">
-          Gere o token em <strong style="color:var(--text)">business.facebook.com</strong> → Configurações → Acesso à API → Marketing API
-        </div>
-      </div>
-      <div style="margin-bottom:14px">
-        <label class="form-label">Access Token</label>
-        <input type="text" id="meta-access-token" class="form-input" placeholder="EAAxxxxxxxxxxxxxxx">
-      </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
-        <div>
-          <label class="form-label">ID da Conta <span style="font-size:11px;font-weight:400;color:var(--text-muted)">(sem act_)</span></label>
-          <input type="text" id="meta-ad-account" class="form-input" placeholder="123456789">
-        </div>
-        <div>
-          <label class="form-label">Pixel ID <span style="font-size:11px;font-weight:400;color:var(--text-muted)">(opcional)</span></label>
-          <input type="text" id="meta-pixel-id-cfg" class="form-input" placeholder="496302...">
-        </div>
-      </div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn btn-secondary" onclick="closeMetaModal()">Cancelar</button>
-      <button class="btn btn-primary" onclick="saveMetaConfig()">Salvar conexão</button>
     </div>
   </div>
 </div>
@@ -1262,14 +1167,9 @@ async function loadFaturamento() {
     document.getElementById('fat-aprovado').textContent     = brl(summary.paid_total || 0);
     document.getElementById('fat-pendente').textContent     = brl(summary.pending_total || 0);
     document.getElementById('fat-total').textContent        = summary.total_orders || 0;
-    document.getElementById('fat-checkout-rev').textContent = brl(summary.checkout_revenue || 0);
-    document.getElementById('fat-checkout-orders').textContent = (summary.checkout_orders||0) + ' pedidos';
-    document.getElementById('fat-bot-rev').textContent      = brl(summary.bot_revenue || 0);
-    document.getElementById('fat-bot-orders').textContent   = (summary.bot_orders||0) + ' pedidos';
     const conv = summary.total_orders > 0 ? ((summary.paid_count / summary.total_orders)*100).toFixed(1) : '0.0';
     document.getElementById('fat-conv-rate').textContent    = `Conversão: ${conv}% · ${summary.paid_count||0} pagos · ${summary.pending_count||0} pendentes`;
     if (summary.checkout_revenue || summary.bot_revenue) {
-      document.getElementById('fat-aprovado-sub').textContent = `🔗 ${brl(summary.checkout_revenue||0)} direto · 🤖 ${brl(summary.bot_revenue||0)} bot`;
     }
     document.getElementById('fat-total-sub').textContent = `${summary.paid_count||0} pagos · ${summary.pending_count||0} pendentes · ${summary.failed_count||0} expirados`;
 
@@ -1365,7 +1265,6 @@ async function loadMetaCampaigns() {
 }
 
 // Meta Config Modal
-function openMetaModal() {
   api('GET', '/meta-config').then(cfg => {
     document.getElementById('meta-access-token').value  = cfg.access_token  || '';
     document.getElementById('meta-ad-account').value    = cfg.ad_account_id || '';
@@ -1374,21 +1273,7 @@ function openMetaModal() {
   }).catch(() => document.getElementById('meta-config-modal').classList.add('open'));
 }
 
-async function saveMetaConfig() {
-  const body = {
-    access_token:  document.getElementById('meta-access-token').value.trim(),
-    ad_account_id: document.getElementById('meta-ad-account').value.trim().replace('act_',''),
-    pixel_id:      document.getElementById('meta-pixel-id-cfg').value.trim(),
-  };
-  try {
-    await api('POST', '/meta-config', body);
-    toast('Configuração Meta salva!');
-    document.getElementById('meta-config-modal').classList.remove('open');
-    loadMetaCampaigns();
-  } catch(e) { toast(e.message, 'error'); }
-}
 
-function closeMetaModal() { document.getElementById('meta-config-modal').classList.remove('open'); }
 
 // Set default date range (last 7 days) for faturamento
 (function() {
@@ -1557,13 +1442,8 @@ async function refreshOrdersOnly() {
     setEl('fat-aprovado', brl(summary.paid_total||0));
     setEl('fat-pendente', brl(summary.pending_total||0));
     setEl('fat-total', summary.total_orders||0);
-    setEl('fat-checkout-rev', brl(summary.checkout_revenue||0));
-    setEl('fat-checkout-orders', (summary.checkout_orders||0)+' pedidos');
-    setEl('fat-bot-rev', brl(summary.bot_revenue||0));
-    setEl('fat-bot-orders', (summary.bot_orders||0)+' pedidos');
     const conv = summary.total_orders > 0 ? ((summary.paid_count/summary.total_orders)*100).toFixed(1) : '0.0';
     setEl('fat-conv-rate', 'Conversao: '+conv+'% · '+(summary.paid_count||0)+' pagos · '+(summary.pending_count||0)+' pendentes');
-    if (summary.checkout_revenue||summary.bot_revenue) setEl('fat-aprovado-sub', brl(summary.checkout_revenue||0)+' direto · '+brl(summary.bot_revenue||0)+' bot');
     setEl('fat-total-sub', (summary.paid_count||0)+' pagos · '+(summary.pending_count||0)+' pendentes · '+(summary.failed_count||0)+' expirados');
 
     // Update orders list
@@ -1593,43 +1473,6 @@ async function refreshOrdersOnly() {
   } catch {}
 }
 
-async function refreshMetaOnly() {
-  if (fatMetaLoading) return;
-  fatMetaLoading = true;
-  const from = document.getElementById('fat-from')?.value;
-  const to   = document.getElementById('fat-to')?.value;
-  const qs   = (from?'?from='+from:'') + (to?(from?'&':'?')+'to='+to:'');
-  try {
-    const data = await api('GET', '/meta/campaigns'+qs);
-    const campaigns = data.data || [];
-    if (!campaigns.length) return;
-    const totalSpend = campaigns.reduce((s,c)=>s+parseFloat(c.spend||0),0);
-    const gastoEl = document.getElementById('fat-gasto');
-    if (gastoEl) gastoEl.textContent = 'R$ '+totalSpend.toFixed(2).replace('.',',');
-    const lastEl = document.getElementById('fat-meta-last');
-    if (lastEl) lastEl.textContent = 'Atualizado '+new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
-    // Update campaigns list
-    const el = document.getElementById('fat-campaigns-list');
-    if (el) {
-      el.innerHTML = campaigns.map(c => {
-        const spend=parseFloat(c.spend||0),clicks=parseInt(c.clicks||0),impressions=parseInt(c.impressions||0);
-        const cpm=impressions>0?((spend/impressions)*1000).toFixed(2):'—';
-        const cpc=clicks>0?(spend/clicks).toFixed(2):'—';
-        return '<div class="meta-campaign-row"><div style="flex:1;min-width:0"><div style="font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+esc(c.campaign_name)+'</div><div style="font-size:10px;color:var(--text-muted);margin-top:2px">'+impressions.toLocaleString('pt-BR')+' impressoes · '+clicks.toLocaleString('pt-BR')+' cliques · CPM R$'+cpm+' · CPC R$'+cpc+'</div></div><div style="text-align:right;flex-shrink:0"><div style="font-weight:700;color:var(--danger)">R$ '+spend.toFixed(2).replace('.',',')+'</div><div style="font-size:10px;color:var(--text-muted)">gasto</div></div></div>';
-      }).join('');
-    }
-    // Recalculate ROAS
-    const aprovEl = document.getElementById('fat-aprovado');
-    if (aprovEl) {
-      const rev = parseFloat(aprovEl.textContent.replace('R$ ','').replace(',','.'))||0;
-      if (totalSpend>0) {
-        const roas = (rev/totalSpend).toFixed(2);
-        const roasEl = document.getElementById('fat-roas');
-        if (roasEl) { roasEl.textContent='ROAS: '+roas+'x'; roasEl.style.color=roas>=2?'var(--success)':roas>=1?'var(--warning)':'var(--danger)'; }
-      }
-    }
-  } catch {} finally { fatMetaLoading=false; }
-}
 
 // ── Init ──────────────────────────────────────────────────────────────────────
 loadCampaigns();

@@ -478,12 +478,12 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
           <div class="card"><div class="card-top"><div class="card-icon" style="background:var(--gl)">💬</div><span class="badge badge-g">+0</span></div><div class="card-val" id="s-msgs">0</div><div class="card-label">Mensagens Totais</div></div>
           <div class="card"><div class="card-top"><div class="card-icon" style="background:var(--bl)">👥</div><span class="badge" style="background:var(--bg4);color:var(--text3)">—</span></div><div class="card-val" id="s-contacts">0</div><div class="card-label">Contatos</div></div>
           <div class="card"><div class="card-top"><div class="card-icon" style="background:var(--pl)">🔀</div><span class="badge" style="background:var(--bg4);color:var(--text3)">—</span></div><div class="card-val" id="s-flows">0</div><div class="card-label">Fluxos Ativos</div></div>
-          <div class="card"><div class="card-top"><div class="card-icon" style="background:var(--yl)">📈</div><span class="badge badge-y">hoje</span></div><div class="card-val" id="s-today">0</div><div class="card-label">Mensagens Hoje</div></div>
+          
         </div>
         <div id="dash-sales-kpis"></div>
         <div class="grid2">
-          <div class="card"><div class="chart-title">📅 Últimos 7 dias</div><div class="bars" id="bar-chart"></div></div>
-          <div class="card"><div class="chart-title">🔀 Fluxos mais acionados</div><div id="hits-chart"></div></div>
+          
+          
         </div>
         <div class="card"><div class="chart-title" style="margin-bottom:12px">📋 Últimas mensagens</div><div id="recent-msgs"></div></div>
       </div>
@@ -603,12 +603,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
             <div class="fe-field" style="margin-top:10px"><label>Mensagem fora do horário</label><textarea class="fe-ta" id="cfg-h-msg" style="min-height:56px"></textarea></div>
           </div>
           <div class="sc">
-            <h3>💳 Chave PIX</h3>
-            <div class="fe-field"><label>Chave PIX (usada no bloco tipo PIX dos fluxos)</label><input class="fe-inp" id="cfg-pix" placeholder="Ex: 51.866.144/0001-66"></div>
-            <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:10px 12px;margin-top:6px">
-              <div style="font-size:11px;color:var(--text2);margin-bottom:8px">Preview no WhatsApp:</div>
-              <div style="background:var(--green);color:#fff;border-radius:6px;padding:8px 14px;text-align:center;font-size:12px;font-weight:600">📋 Copiar Chave PIX</div>
-            </div>
+            
           </div>
           <div class="sc">
             <h3>🔑 API Keys</h3>
@@ -1497,10 +1492,6 @@ function renderCRMKpis(kpis){
   const el = document.getElementById('crm-kpis');
   if(!el) return;
   el.innerHTML = [
-    { icon:'👥', val: kpis.totalLeads||0, label:'Total de Leads', color:'var(--blue)' },
-    { icon:'🔥', val: kpis.activeLeads||0, label:'Leads Ativos', color:'var(--purple)' },
-    { icon:'✅', val: kpis.finished||0, label:'Finalizados', color:'#25D366' },
-    { icon:'🧑‍💼', val: kpis.pausedByHuman||0, label:'Com Atendente', color:'var(--yellow)' },
   ].map(function(k){
     return '<div class="crm-kpi"><div class="crm-kpi-icon">'+k.icon+'</div>' +
       '<div class="crm-kpi-val" style="color:'+k.color+'">'+k.val+'</div>' +
@@ -1570,8 +1561,6 @@ function renderDashKpis(kpis){
   if(el){
     el.innerHTML =
       '<div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px">' +
-        kpiMini('✅', kpis.finished||0, 'Finalizados', '#3a8fff') +
-        kpiMini('🧑‍💼', kpis.pausedByHuman||0, 'Com Atendente', '#f59e0b') +
       '</div>';
   }
 }
@@ -1859,10 +1848,9 @@ var campList = [];
 var campModalLeads = [];
 var campEditId = null;
 var campSelectedLeads = new Set();
-var campSegmentPick = 'nao_responderam';
+var campSegmentPick = 'todos_ativos';
 
 var SEG_LABELS = {
-  nao_responderam: { icon:'😶', label:'Não responderam', desc:'Pararam de responder (mais de 6h sem atividade)' },
   potencial_compra: { icon:'🔥', label:'Potencial de compra', desc:'Avançaram no fluxo mas não finalizaram' },
   novos: { icon:'🆕', label:'Novos leads', desc:'Interagiram nas últimas 24h' },
   todos_ativos: { icon:'📋', label:'Todos ativos', desc:'Todos os leads em andamento' },
@@ -2163,7 +2151,7 @@ async function changeCampSeg(seg){
 
 async function saveCampaign(){
   var name = (document.getElementById('camp-name')?.value||'').trim();
-  var seg = document.getElementById('camp-seg')?.value || 'nao_responderam';
+  var seg = document.getElementById('camp-seg')?.value || 'todos_ativos';
   var delay = parseInt(document.getElementById('camp-delay')?.value) || 5;
   if (!name) { toast('Digite um nome para a campanha','err'); return; }
 
