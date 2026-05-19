@@ -559,7 +559,7 @@ router.post('/meta-config', (req, res) => {
   const { access_token, ad_account_id, pixel_id } = req.body;
   const existing = db.prepare('SELECT id FROM meta_config WHERE id = 1').get();
   if (existing) {
-    db.prepare('UPDATE meta_config SET access_token=?, ad_account_id=?, pixel_id=?, updated_at=datetime('now') WHERE id=1').run(access_token||'', ad_account_id||'', pixel_id||'');
+    db.prepare(`UPDATE meta_config SET access_token=?, ad_account_id=?, pixel_id=?, updated_at=datetime('now') WHERE id=1`).run(access_token||'', ad_account_id||'', pixel_id||'');
   } else {
     db.prepare('INSERT INTO meta_config (id, access_token, ad_account_id, pixel_id) VALUES (1,?,?,?)').run(access_token||'', ad_account_id||'', pixel_id||'');
   }
