@@ -50,7 +50,7 @@ router.post('/login', async (req, res) => {
   const valid = await bcrypt.compare(password, user.password_hash);
   if (!valid) return res.status(401).json({ error: 'E-mail ou senha incorretos' });
 
-  db.prepare('UPDATE users SET last_login = datetime('now') WHERE id = ?').run(user.id);
+  db.prepare('UPDATE users SET last_login=? WHERE id=?').run(new Date().toISOString(), user.id);
   req.session.userId = user.id;
 
   const redirect = user.plan === 'admin' ? '/admin' : '/dashboard';
