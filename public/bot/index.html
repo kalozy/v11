@@ -603,9 +603,6 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
             <div class="fe-field" style="margin-top:10px"><label>Mensagem fora do horário</label><textarea class="fe-ta" id="cfg-h-msg" style="min-height:56px"></textarea></div>
           </div>
           <div class="sc">
-            
-          </div>
-          <div class="sc">
             <h3>🔑 API Keys</h3>
             <div class="fe-field"><label>Anthropic API Key (IA das respostas)</label><input class="fe-inp" id="cfg-key" type="password" placeholder="sk-ant-..."></div>
             <div class="fe-field" style="margin-top:10px"><label>Groq API Key (transcrição de áudio — grátis)</label><input class="fe-inp" id="cfg-groq" type="password" placeholder="gsk_..."></div>
@@ -1642,10 +1639,6 @@ function renderRemarketingPage(rm, stats){
   el.innerHTML =
     // Stats row
     '<div class="rm-stat-row" style="margin-bottom:20px">' +
-      rmStat('🎯', stats.eligible||0, 'Elegíveis agora', '#3a8fff') +
-      rmStat('📨', (stats.sent1||0)+(stats.sent2||0)+(stats.sent3||0), 'Total enviados', '#a855f7') +
-      rmStat('🔄', stats.converted||0, 'Convertidos', '#25D366') +
-      rmStat('💬', stats.total||0, 'Leads ativos', '#f59e0b') +
     '</div>' +
 
     '<div class="rm-grid">' +
@@ -1709,12 +1702,7 @@ function renderRemarketingPage(rm, stats){
       '</div>' +
 
       '<div class="rm-card" style="margin-top:14px">' +
-        '<h3>📊 Leads elegíveis agora</h3>' +
-        '<div id="rm-eligible-list">' +
-          (stats.eligible > 0
-            ? '<div style="font-size:13px;color:var(--text2)">'+stats.eligible+' lead(s) na Etapa 1 sem resposta há mais de '+rm.delayMinutes+' minutos</div>'
-            : '<div style="font-size:12px;color:var(--text3)">Nenhum lead elegível no momento</div>') +
-        '</div>' +
+        '' +
       '</div>' +
     '</div>' + // right
 
@@ -1904,18 +1892,7 @@ function renderCampaignsPage() {
   var body = document.getElementById('camp-page-body');
   if (!body) return;
 
-  // Segment summary cards
-  var segHtml = '<div style="margin-bottom:20px"><div style="font-size:11px;font-weight:700;letter-spacing:.08em;margin-bottom:12px;color:var(--text3)">SEGMENTOS DE LEADS</div><div style="display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:24px">';
-  Object.entries(SEG_LABELS).forEach(function(entry) {
-    var k = entry[0], v = entry[1];
-    var count = (campData.counts || {})[k] || 0;
-    segHtml += '<div class="seg-card' + (campSegmentPick===k ? ' active' : '') + '" data-seg="'+k+'" onclick="campSegmentPick=\''+k+'\';renderCampaignsPage()">';
-    segHtml += '<div class="seg-count">'+count+'</div>';
-    segHtml += '<div class="seg-title">'+v.icon+' '+v.label+'</div>';
-    segHtml += '<div class="seg-desc">'+v.desc+'</div>';
-    segHtml += '</div>';
-  });
-  segHtml += '</div></div>';
+  var segHtml = ''; // Segments removed
 
   // Campaign list
   var listHtml = '';
