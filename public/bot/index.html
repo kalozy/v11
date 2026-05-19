@@ -847,7 +847,7 @@ async function refreshDashboard(){
     ]);
     statsData = stats;
     flowsData = flows;
-    document.getElementById('s-flows').textContent = (flows.flows||[]).filter(f=>f.active!==false).length;
+    _s('s-flows', (flows.flows||[]).filter(f=>f.active!==false).length);
     document.getElementById('sb-name').textContent = flows.botName||'MeuBot';
     renderStats(stats);
     renderRecentMsgs();
@@ -862,9 +862,10 @@ function renderStats(s){
     var d = new Date(entry[0]); return (d >= r.from && d <= r.to) ? acc + entry[1] : acc;
   }, 0);
   var rangeLabel = { today:'Hoje', '7d':'7 dias', '30d':'30 dias', custom:'Período' }[activeDateFilter] || 'Hoje';
-  document.getElementById('s-msgs').textContent = s.totalMessages||0;
-  document.getElementById('s-contacts').textContent = s.totalContacts||0;
-  document.getElementById('s-today').textContent = filteredTotal;
+  const _s = (id, val) => { const e=document.getElementById(id); if(e) e.textContent=val; };
+  _s('s-msgs', s.totalMessages||0);
+  _s('s-contacts', s.totalContacts||0);
+  _s('s-today', filteredTotal);
   // Update label of last card
   var todayLabel = document.querySelector('#stat-cards .card:last-child .card-label');
   if (todayLabel) todayLabel.textContent = 'Mensagens — ' + rangeLabel;
