@@ -218,17 +218,26 @@
         <input type="date" id="fat-from" style="padding:6px 10px;border:1px solid var(--border);border-radius:6px;font-size:12px;background:var(--bg-2)">
         <span style="color:var(--text-muted);font-size:12px">até</span>
         <input type="date" id="fat-to" style="padding:6px 10px;border:1px solid var(--border);border-radius:6px;font-size:12px;background:var(--bg-2)">
-        <button class="btn btn-secondary" onclick="loadFaturamento()" style="font-size:12px;padding:6px 12px">Filtrar</button><span id="fat-live-badge" style="display:flex;align-items:center;gap:5px;font-size:11px;color:var(--success);font-weight:600"><span id="fat-live-dot" style="width:7px;height:7px;border-radius:50%;background:var(--success);animation:fatpulse 2s infinite"></span>Ao vivo</span>
+        <button class="btn btn-secondary" onclick="loadFaturamento()" style="font-size:12px;padding:6px 12px">Filtrar</button>
+        <span id="fat-live-badge" style="display:flex;align-items:center;gap:5px;font-size:11px;color:var(--success);font-weight:600"><span id="fat-live-dot" style="width:7px;height:7px;border-radius:50%;background:var(--success);animation:fatpulse 2s infinite"></span>Ao vivo</span>
+        <button class="btn btn-secondary" onclick="openMetaModal()" style="font-size:12px;padding:6px 12px;display:flex;align-items:center;gap:5px" id="meta-connect-btn">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="#1877f2"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+          Meta Ads
+        </button>
+        <button class="btn btn-secondary" onclick="openWooviModal()" style="font-size:12px;padding:6px 12px;display:flex;align-items:center;gap:5px" id="woovi-connect-btn">
+          💸 Woovi
+        </button>
         </button>
       </div>
     </div>
 
     <!-- KPIs -->
-    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:20px" id="fat-kpis">
-      <div class="stat-card"><div class="stat-label">💰 Receita Aprovada</div><div class="stat-value green" id="fat-aprovado">R$ —</div></div>
+    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-top:20px" id="fat-kpis">
+      <div class="stat-card"><div class="stat-label">💰 Receita Aprovada</div><div class="stat-value green" id="fat-aprovado">R$ —</div><div style="font-size:10px;color:var(--text-muted);margin-top:4px" id="fat-conv-rate"></div></div>
       <div class="stat-card"><div class="stat-label">⏳ Receita Pendente</div><div class="stat-value" id="fat-pendente">R$ —</div></div>
       <div class="stat-card"><div class="stat-label">📦 Total de Pedidos</div><div class="stat-value blue" id="fat-total">—</div><div style="font-size:10px;color:var(--text-muted);margin-top:4px" id="fat-total-sub"></div></div>
-      <div class="stat-card"><div class="stat-label">📣 Gasto em Anúncio</div><div class="stat-value red" id="fat-gasto">R$ —</div><div style="font-size:10px;color:var(--text-muted);margin-top:4px" id="fat-roas"></div></div>
+      <div class="stat-card"><div class="stat-label">📣 Gasto Meta Ads</div><div class="stat-value red" id="fat-gasto">R$ —</div><div style="font-size:10px;color:var(--text-muted);margin-top:4px" id="fat-roas"></div></div>
+      <div class="stat-card"><div class="stat-label">💸 Pagos Woovi Hoje</div><div class="stat-value green" id="fat-woovi-today">—</div><div style="font-size:10px;color:var(--text-muted);margin-top:4px" id="fat-woovi-revenue">R$ —</div></div>
     </div>
     <!-- Origem das vendas -->
     
@@ -1389,6 +1398,72 @@ function plPreviewImg() {
 
 
 
+
+// ── Meta Ads Modal ────────────────────────────────────────────────────────────
+function openMetaModal() {
+  api('GET', '/meta-config').then(cfg => {
+    document.getElementById('meta-access-token').value = cfg.access_token || '';
+    document.getElementById('meta-ad-account').value   = cfg.ad_account_id || '';
+    document.getElementById('meta-pixel-id-cfg').value = cfg.pixel_id || '';
+  }).catch(() => {});
+  document.getElementById('meta-modal').classList.add('open');
+}
+function closeMetaModal() { document.getElementById('meta-modal').classList.remove('open'); }
+async function saveMetaConfig() {
+  const body = {
+    access_token:  document.getElementById('meta-access-token').value.trim(),
+    ad_account_id: document.getElementById('meta-ad-account').value.trim().replace('act_',''),
+    pixel_id:      document.getElementById('meta-pixel-id-cfg').value.trim(),
+  };
+  try {
+    await api('POST', '/meta-config', body);
+    toast('Meta Ads conectado!');
+    closeMetaModal();
+    loadMetaCampaigns();
+    loadWooviToday();
+  } catch(e) { toast(e.message, 'error'); }
+}
+
+// ── Woovi Modal ───────────────────────────────────────────────────────────────
+function openWooviModal() { document.getElementById('woovi-modal').classList.add('open'); }
+function closeWooviModal() { document.getElementById('woovi-modal').classList.remove('open'); }
+
+// ── Woovi today stats ─────────────────────────────────────────────────────────
+async function loadWooviToday() {
+  try {
+    const today = new Date().toISOString().slice(0,10);
+    const orders = await api('GET', '/orders?from='+today+'&to='+today+'&limit=200');
+    const paid = orders.filter(o => o.status === 'paid');
+    const setEl = (id, v) => { const e=document.getElementById(id); if(e) e.textContent=v; };
+    setEl('fat-woovi-today', paid.length);
+    setEl('fat-woovi-revenue', brl(paid.reduce((s,o) => s + (o.valor||0), 0)));
+  } catch {}
+}
+
+// ── Meta Campaigns ────────────────────────────────────────────────────────────
+async function loadMetaCampaigns() {
+  const from = document.getElementById('fat-from')?.value;
+  const to   = document.getElementById('fat-to')?.value;
+  const qs   = (from?'?from='+from:'') + (to?(from?'&':'?')+'to='+to:'');
+  try {
+    const data = await api('GET', '/meta/campaigns'+qs);
+    const campaigns = (data.data || []);
+    const totalSpend = campaigns.reduce((s,c) => s + parseFloat(c.spend||0), 0);
+    const gastoEl = document.getElementById('fat-gasto');
+    if (gastoEl && totalSpend > 0) gastoEl.textContent = 'R$ ' + totalSpend.toFixed(2).replace('.',',');
+    const btn = document.getElementById('meta-connect-btn');
+    if (btn && totalSpend > 0) { btn.style.borderColor = 'var(--success)'; btn.style.color = 'var(--success)'; }
+    // Recalc ROAS
+    const aprovEl = document.getElementById('fat-aprovado');
+    if (aprovEl && totalSpend > 0) {
+      const rev = parseFloat(aprovEl.textContent.replace('R$ ','').replace(',','.'))||0;
+      const roas = (rev/totalSpend).toFixed(2);
+      const roasEl = document.getElementById('fat-roas');
+      if (roasEl) { roasEl.textContent='ROAS: '+roas+'x'; roasEl.style.color=roas>=2?'var(--success)':roas>=1?'var(--warning)':'var(--danger)'; }
+    }
+  } catch {}
+}
+
 // ── Faturamento auto-refresh ──────────────────────────────────────────────────
 let fatRefreshOrders   = null; // timer for orders (every 15s)
 let fatRefreshMeta     = null; // timer for Meta Ads (every 5min)
@@ -1480,6 +1555,54 @@ fetch('/me').then(r=>r.json()).then(user=>{
 }).catch(()=>{});
 
 </script>
+
+<!-- ── Meta Ads Modal ──────────────────────────────────────────────────────── -->
+<div class="modal-overlay" id="meta-modal" onclick="if(event.target.id==='meta-modal')closeMetaModal()">
+  <div class="modal" style="max-width:460px;width:95%">
+    <div class="modal-header">
+      <div><div class="modal-title">Conectar Meta Ads</div><div style="font-size:12px;color:var(--text-muted);margin-top:2px">Visualize gastos e calcule ROAS por campanha</div></div>
+      <button class="modal-close" onclick="closeMetaModal()">×</button>
+    </div>
+    <div class="modal-body" style="padding:22px">
+      <div style="background:var(--bg-3);border-radius:10px;padding:14px;margin-bottom:18px;font-size:12px;color:var(--text-muted);line-height:1.7">
+        📘 Gere o token em <strong style="color:var(--text)">business.facebook.com</strong> → Configurações → Acesso à API → Marketing API
+      </div>
+      <div style="margin-bottom:14px"><label class="form-label">Access Token</label><input type="text" id="meta-access-token" class="form-input" placeholder="EAAxxxxxxx..."></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div><label class="form-label">ID da Conta <span style="font-size:11px;font-weight:400;color:var(--text-muted)">(sem act_)</span></label><input type="text" id="meta-ad-account" class="form-input" placeholder="123456789"></div>
+        <div><label class="form-label">Pixel ID <span style="font-size:11px;font-weight:400;color:var(--text-muted)">(opcional)</span></label><input type="text" id="meta-pixel-id-cfg" class="form-input" placeholder="496302..."></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeMetaModal()">Cancelar</button>
+      <button class="btn btn-primary" onclick="saveMetaConfig()">Salvar conexão</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── Woovi Modal ──────────────────────────────────────────────────────────── -->
+<div class="modal-overlay" id="woovi-modal" onclick="if(event.target.id==='woovi-modal')closeWooviModal()">
+  <div class="modal" style="max-width:440px;width:95%">
+    <div class="modal-header">
+      <div><div class="modal-title">💸 Conectar Woovi</div><div style="font-size:12px;color:var(--text-muted);margin-top:2px">Rastreamento de pagamentos PIX em tempo real</div></div>
+      <button class="modal-close" onclick="closeWooviModal()">×</button>
+    </div>
+    <div class="modal-body" style="padding:22px">
+      <div style="background:var(--bg-3);border-radius:10px;padding:14px;margin-bottom:18px;font-size:12px;color:var(--text-muted);line-height:1.7">
+        📋 Configure o webhook no painel da Woovi:<br>
+        <code style="background:var(--bg-4);padding:2px 6px;border-radius:4px;color:var(--accent)">/api/webhooks/woovi</code>
+        <br>A confirmação de pagamentos é automática via webhook.
+      </div>
+      <div style="margin-bottom:14px"><label class="form-label">App ID Woovi</label><input type="text" id="woovi-app-id-cfg" class="form-input" placeholder="Client_Id_xxx:Client_Secret_xxx"></div>
+      <div style="background:var(--success-bg);border:1px solid rgba(22,163,74,.2);border-radius:8px;padding:11px 14px;font-size:12px;color:var(--success);margin-top:4px">
+        ✅ Configure este App ID nos seus links de pagamento para rastrear pedidos pagos hoje
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeWooviModal()">Fechar</button>
+    </div>
+  </div>
+</div>
 <div id="toast-container" style="position:fixed;bottom:20px;right:20px;z-index:9999;display:flex;flex-direction:column;gap:8px;pointer-events:none"></div>
 </body>
 </html>
