@@ -1264,14 +1264,6 @@ async function loadMetaCampaigns() {
   } catch(e) { el.innerHTML = `<div style="color:var(--danger);padding:16px;font-size:12px">Erro: ${esc(e.message)}</div>`; }
 }
 
-// Meta Config Modal
-  api('GET', '/meta-config').then(cfg => {
-    document.getElementById('meta-access-token').value  = cfg.access_token  || '';
-    document.getElementById('meta-ad-account').value    = cfg.ad_account_id || '';
-    document.getElementById('meta-pixel-id-cfg').value  = cfg.pixel_id      || '';
-    document.getElementById('meta-config-modal').classList.add('open');
-  }).catch(() => document.getElementById('meta-config-modal').classList.add('open'));
-}
 
 
 
