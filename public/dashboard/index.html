@@ -224,23 +224,47 @@
           <svg width="14" height="14" viewBox="0 0 24 24" fill="#1877f2"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
           Meta Ads
         </button>
-        <button class="btn btn-secondary" onclick="openWooviModal()" style="font-size:12px;padding:6px 12px;display:flex;align-items:center;gap:5px" id="woovi-connect-btn">
-          💸 Woovi
-        </button>
         </button>
       </div>
     </div>
 
     <!-- KPIs -->
-    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-top:20px" id="fat-kpis">
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:20px" id="fat-kpis">
       <div class="stat-card"><div class="stat-label">💰 Receita Aprovada</div><div class="stat-value green" id="fat-aprovado">R$ —</div><div style="font-size:10px;color:var(--text-muted);margin-top:4px" id="fat-conv-rate"></div></div>
       <div class="stat-card"><div class="stat-label">⏳ Receita Pendente</div><div class="stat-value" id="fat-pendente">R$ —</div></div>
       <div class="stat-card"><div class="stat-label">📦 Total de Pedidos</div><div class="stat-value blue" id="fat-total">—</div><div style="font-size:10px;color:var(--text-muted);margin-top:4px" id="fat-total-sub"></div></div>
       <div class="stat-card"><div class="stat-label">📣 Gasto Meta Ads</div><div class="stat-value red" id="fat-gasto">R$ —</div><div style="font-size:10px;color:var(--text-muted);margin-top:4px" id="fat-roas"></div></div>
-      <div class="stat-card"><div class="stat-label">💸 Pagos Woovi Hoje</div><div class="stat-value green" id="fat-woovi-today">—</div><div style="font-size:10px;color:var(--text-muted);margin-top:4px" id="fat-woovi-revenue">R$ —</div></div>
     </div>
-    <!-- Origem das vendas -->
-    
+    <!-- Pedidos Recentes -->
+    <div style="background:var(--bg-2);border:1px solid var(--border);border-radius:10px;padding:18px;margin-top:16px">
+      <div style="font-size:13px;font-weight:600;margin-bottom:14px;display:flex;justify-content:space-between">
+        <span>Pedidos Recentes</span>
+        <span id="fat-conv-rate-badge" style="font-size:11px;color:var(--text-muted)"></span>
+      </div>
+      <div id="fat-orders-list" style="font-size:12px">
+        <div style="color:var(--text-muted);text-align:center;padding:20px">Carregando…</div>
+      </div>
+    </div>
+
+    <!-- Atribuição por Campanha (UTM) -->
+    <div style="background:var(--bg-2);border:1px solid var(--border);border-radius:10px;padding:18px;margin-top:16px">
+      <div style="font-size:13px;font-weight:600;margin-bottom:14px">📊 Atribuição por Campanha (UTM)</div>
+      <div style="overflow-x:auto">
+        <table style="width:100%;font-size:12px;border-collapse:collapse">
+          <thead><tr style="color:var(--text-muted);border-bottom:1px solid var(--border)">
+            <th style="text-align:left;padding:6px 10px">Campanha</th>
+            <th style="text-align:left;padding:6px 10px">Fonte</th>
+            <th style="text-align:right;padding:6px 10px">Pedidos</th>
+            <th style="text-align:right;padding:6px 10px">Pagos</th>
+            <th style="text-align:right;padding:6px 10px">Receita</th>
+            <th style="text-align:right;padding:6px 10px">Taxa</th>
+          </tr></thead>
+          <tbody id="fat-attr-body">
+            <tr><td colspan="6" style="text-align:center;color:var(--text-muted);padding:20px">Carregando…</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
   </div>
 
 </main>
@@ -1173,17 +1197,18 @@ async function loadFaturamento() {
       api('GET', '/orders/by-campaign'),
     ]);
 
-    document.getElementById('fat-aprovado').textContent     = brl(summary.paid_total || 0);
-    document.getElementById('fat-pendente').textContent     = brl(summary.pending_total || 0);
-    document.getElementById('fat-total').textContent        = summary.total_orders || 0;
+    (document.getElementById('fat-aprovado')||{}).textContent     = brl(summary.paid_total || 0);
+    (document.getElementById('fat-pendente')||{}).textContent     = brl(summary.pending_total || 0);
+    (document.getElementById('fat-total')||{}).textContent        = summary.total_orders || 0;
     const conv = summary.total_orders > 0 ? ((summary.paid_count / summary.total_orders)*100).toFixed(1) : '0.0';
-    document.getElementById('fat-conv-rate').textContent    = `Conversão: ${conv}% · ${summary.paid_count||0} pagos · ${summary.pending_count||0} pendentes`;
+    (document.getElementById('fat-conv-rate')||{}).textContent    = `Conversão: ${conv}% · ${summary.paid_count||0} pagos · ${summary.pending_count||0} pendentes`;
     if (summary.checkout_revenue || summary.bot_revenue) {
     }
-    document.getElementById('fat-total-sub').textContent = `${summary.paid_count||0} pagos · ${summary.pending_count||0} pendentes · ${summary.failed_count||0} expirados`;
+    (document.getElementById('fat-total-sub')||{}).textContent = `${summary.paid_count||0} pagos · ${summary.pending_count||0} pendentes · ${summary.failed_count||0} expirados`;
 
     // Orders list
     const ol = document.getElementById('fat-orders-list');
+    if (!ol) return;
     if (!orders.length) { ol.innerHTML = '<div style="color:var(--text-muted);text-align:center;padding:20px">Sem pedidos no período</div>'; }
     else {
       ol.innerHTML = orders.map(o => {
@@ -1258,15 +1283,15 @@ async function loadMetaCampaigns() {
 
     // Update total ad spend and ROAS
     const totalSpend = campaigns.reduce((s,c) => s + parseFloat(c.spend||0), 0);
-    document.getElementById('fat-gasto').textContent = 'R$ ' + totalSpend.toFixed(2).replace('.',',');
+    (document.getElementById('fat-gasto')||{}).textContent = 'R$ ' + totalSpend.toFixed(2).replace('.',',');
     // Calculate ROAS from current summary
     try {
-      const sumEl = document.getElementById('fat-aprovado').textContent;
+      const sumEl = (document.getElementById('fat-aprovado')||{}).textContent;
       const revStr = sumEl.replace('R$ ','').replace(',','.');
       const rev = parseFloat(revStr) || 0;
       if (totalSpend > 0) {
         const roas = (rev / totalSpend).toFixed(2);
-        document.getElementById('fat-roas').textContent = `ROAS: ${roas}x`;
+        (document.getElementById('fat-roas')||{}).textContent = `ROAS: ${roas}x`;
         document.getElementById('fat-roas').style.color = roas >= 2 ? '#22c55e' : roas >= 1 ? '#f59e0b' : '#ef4444';
       }
     } catch {}
@@ -1420,25 +1445,12 @@ async function saveMetaConfig() {
     toast('Meta Ads conectado!');
     closeMetaModal();
     loadMetaCampaigns();
-    loadWooviToday();
   } catch(e) { toast(e.message, 'error'); }
 }
 
 // ── Woovi Modal ───────────────────────────────────────────────────────────────
-function openWooviModal() { document.getElementById('woovi-modal').classList.add('open'); }
-function closeWooviModal() { document.getElementById('woovi-modal').classList.remove('open'); }
 
 // ── Woovi today stats ─────────────────────────────────────────────────────────
-async function loadWooviToday() {
-  try {
-    const today = new Date().toISOString().slice(0,10);
-    const orders = await api('GET', '/orders?from='+today+'&to='+today+'&limit=200');
-    const paid = orders.filter(o => o.status === 'paid');
-    const setEl = (id, v) => { const e=document.getElementById(id); if(e) e.textContent=v; };
-    setEl('fat-woovi-today', paid.length);
-    setEl('fat-woovi-revenue', brl(paid.reduce((s,o) => s + (o.valor||0), 0)));
-  } catch {}
-}
 
 // ── Meta Campaigns ────────────────────────────────────────────────────────────
 async function loadMetaCampaigns() {
@@ -1580,11 +1592,6 @@ fetch('/me').then(r=>r.json()).then(user=>{
   </div>
 </div>
 
-<!-- ── Woovi Modal ──────────────────────────────────────────────────────────── -->
-<div class="modal-overlay" id="woovi-modal" onclick="if(event.target.id==='woovi-modal')closeWooviModal()">
-  <div class="modal" style="max-width:440px;width:95%">
-    <div class="modal-header">
-      <div><div class="modal-title">💸 Conectar Woovi</div><div style="font-size:12px;color:var(--text-muted);margin-top:2px">Rastreamento de pagamentos PIX em tempo real</div></div>
       <button class="modal-close" onclick="closeWooviModal()">×</button>
     </div>
     <div class="modal-body" style="padding:22px">
