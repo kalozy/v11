@@ -34,6 +34,11 @@
   </div>
 
   <nav>
+    <!-- Home -->
+    <div class="nav-item active" data-page="home" onclick="navigate('home', this)" style="margin-bottom:2px">
+      <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="opacity:.65;flex-shrink:0"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      <span class="nav-label">Home</span>
+    </div>
     <!-- CLOAKING submenu -->
     <div class="nav-item" onclick="toggleGroup('cloaking')" style="justify-content:space-between">
       <div style="display:flex;align-items:center;gap:8px">
@@ -43,7 +48,7 @@
       <svg id="cloaking-arrow" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" style="transition:transform .2s;opacity:.5"><path d="M19 9l-7 7-7-7"/></svg>
     </div>
     <div id="cloaking-group" style="overflow:hidden;max-height:0px;transition:max-height .25s ease">
-      <div class="nav-item active" data-page="campaigns" onclick="navigate('campaigns', this)" style="padding-left:28px">
+      <div class="nav-item" data-page="campaigns" onclick="navigate('campaigns', this)" style="padding-left:28px">
         <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 3h7v7H3zm11 0h7v7h-7zM3 14h7v7H3zm11 0h7v7h-7z"/></svg>
         <span class="nav-label">Campaigns</span>
       </div>
@@ -113,8 +118,112 @@
   <!-- Date Nav -->
 
 
+
+  <!-- ── Home page ─────────────────────────────────────────────────────────── -->
+  <div class="page active" id="page-home">
+    <div style="max-width:900px;margin:0 auto;padding:8px 4px 40px">
+
+      <!-- Hero -->
+      <div style="text-align:center;padding:40px 20px 36px;margin-bottom:32px">
+        <div style="width:52px;height:52px;background:linear-gradient(135deg,#3b82f6,#6366f1);border-radius:14px;display:flex;align-items:center;justify-content:center;margin:0 auto 18px;font-size:24px;box-shadow:0 8px 24px rgba(59,130,246,.3)">⚡</div>
+        <h1 id="home-greeting" style="font-size:26px;font-weight:800;color:var(--text);letter-spacing:-.5px;margin-bottom:8px">Bem-vindo ao Traffic Control</h1>
+        <p style="font-size:15px;color:var(--text-muted);max-width:520px;margin:0 auto;line-height:1.7">Sua plataforma completa para gestão de tráfego, automação WhatsApp e rastreamento de vendas</p>
+      </div>
+
+      <!-- Quick stats -->
+      <div id="home-stats" style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:36px"></div>
+
+      <!-- Features grid -->
+      <div style="margin-bottom:12px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--text-muted)">Módulos disponíveis</div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:40px">
+
+        <!-- Cloaking -->
+        <div class="home-card" onclick="navigate('campaigns', document.querySelector('[data-page=campaigns]'))">
+          <div class="home-card-icon" style="background:linear-gradient(135deg,#3b82f6,#2563eb)">🛡️</div>
+          <div class="home-card-title">Cloaking</div>
+          <div class="home-card-desc">Crie campanhas inteligentes com redirecionamento baseado em localização, dispositivo, proxy e muito mais. Proteja suas offers.</div>
+          <div class="home-card-tags"><span class="home-tag">Campaigns</span><span class="home-tag">Request Log</span></div>
+          <div class="home-card-cta">Acessar →</div>
+        </div>
+
+        <!-- WhatsApp Bot -->
+        <div class="home-card" onclick="toggleGroup('bot');navigateBot('dashboard',null)">
+          <div class="home-card-icon" style="background:linear-gradient(135deg,#25D366,#128c4e)">🤖</div>
+          <div class="home-card-title">WhatsApp Bot</div>
+          <div class="home-card-desc">Automatize atendimentos, crie fluxos de vendas, envie campanhas em massa e gerencie leads com IA integrada.</div>
+          <div class="home-card-tags"><span class="home-tag">Fluxos</span><span class="home-tag">CRM</span><span class="home-tag">Campanhas</span><span class="home-tag">Remarketing</span></div>
+          <div class="home-card-cta">Acessar →</div>
+        </div>
+
+        <!-- Links de Pagamento -->
+        <div class="home-card" onclick="navigate('payment-links', document.querySelector('[data-page=payment-links]'))">
+          <div class="home-card-icon" style="background:linear-gradient(135deg,#f59e0b,#d97706)">🔗</div>
+          <div class="home-card-title">Links de Pagamento</div>
+          <div class="home-card-desc">Crie checkouts personalizados com PIX via Woovi, Facebook Pixel, UTMify e WhatsApp de suporte. Cada link com seu slug.</div>
+          <div class="home-card-tags"><span class="home-tag">PIX</span><span class="home-tag">Meta Pixel</span><span class="home-tag">UTMify</span></div>
+          <div class="home-card-cta">Criar link →</div>
+        </div>
+
+        <!-- CRM -->
+        <div class="home-card" onclick="toggleGroup('bot');navigateBot('crm',null)">
+          <div class="home-card-icon" style="background:linear-gradient(135deg,#8b5cf6,#6d28d9)">📊</div>
+          <div class="home-card-title">CRM Kanban</div>
+          <div class="home-card-desc">Visualize todos os leads em colunas por etapa do funil. Identifique em qual fase cada lead está e aja na hora certa.</div>
+          <div class="home-card-tags"><span class="home-tag">Leads</span><span class="home-tag">Funil</span><span class="home-tag">Kanban</span></div>
+          <div class="home-card-cta">Ver CRM →</div>
+        </div>
+
+        <!-- Faturamento -->
+        <div class="home-card" onclick="navigate('faturamento', document.querySelector('[data-page=faturamento]'))">
+          <div class="home-card-icon" style="background:linear-gradient(135deg,#22c55e,#15803d)">💰</div>
+          <div class="home-card-title">Faturamento</div>
+          <div class="home-card-desc">Acompanhe receita aprovada e pendente em tempo real, conecte Meta Ads para ver gasto por campanha e calcule o ROAS automaticamente.</div>
+          <div class="home-card-tags"><span class="home-tag">Receita</span><span class="home-tag">Meta Ads</span><span class="home-tag">ROAS</span></div>
+          <div class="home-card-cta">Ver relatório →</div>
+        </div>
+
+        <!-- Remarketing -->
+        <div class="home-card" onclick="toggleGroup('bot');navigateBot('remarketing',null)">
+          <div class="home-card-icon" style="background:linear-gradient(135deg,#ec4899,#be185d)">🔄</div>
+          <div class="home-card-title">Remarketing</div>
+          <div class="home-card-desc">Reenvolva leads inativos automaticamente com mensagens programadas. Defina intervalos, máximo de tentativas e mídias personalizadas.</div>
+          <div class="home-card-tags"><span class="home-tag">Automação</span><span class="home-tag">Reengajamento</span></div>
+          <div class="home-card-cta">Configurar →</div>
+        </div>
+
+      </div>
+
+      <!-- Quick start steps -->
+      <div style="background:var(--bg-2);border:1px solid var(--border);border-radius:12px;padding:24px">
+        <div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:18px;display:flex;align-items:center;gap:8px">
+          <span style="width:22px;height:22px;background:var(--accent);border-radius:6px;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:800">▶</span>
+          Como começar
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px">
+          <div style="display:flex;align-items:flex-start;gap:10px">
+            <div style="width:26px;height:26px;border-radius:50%;background:var(--accent-glow);color:var(--accent);font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;border:1.5px solid rgba(59,130,246,.25)">1</div>
+            <div><div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:3px">Conecte o WhatsApp</div><div style="font-size:12px;color:var(--text-muted);line-height:1.5">Vá em WhatsApp Bot → Dashboard → Conectar e escaneie o QR Code</div></div>
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:10px">
+            <div style="width:26px;height:26px;border-radius:50%;background:var(--accent-glow);color:var(--accent);font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;border:1.5px solid rgba(59,130,246,.25)">2</div>
+            <div><div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:3px">Crie seus Fluxos</div><div style="font-size:12px;color:var(--text-muted);line-height:1.5">Configure as etapas de atendimento com mensagens, imagens e ações automáticas</div></div>
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:10px">
+            <div style="width:26px;height:26px;border-radius:50%;background:var(--accent-glow);color:var(--accent);font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;border:1.5px solid rgba(59,130,246,.25)">3</div>
+            <div><div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:3px">Crie um Link de Pagamento</div><div style="font-size:12px;color:var(--text-muted);line-height:1.5">Configure seu checkout com Woovi PIX, Pixel do Facebook e UTMify</div></div>
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:10px">
+            <div style="width:26px;height:26px;border-radius:50%;background:var(--accent-glow);color:var(--accent);font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;border:1.5px solid rgba(59,130,246,.25)">4</div>
+            <div><div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:3px">Acompanhe o Faturamento</div><div style="font-size:12px;color:var(--text-muted);line-height:1.5">Conecte o Meta Ads para ver gastos por campanha e calcular o ROAS em tempo real</div></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
   <!-- ── Campaigns page ─────────────────────────────────────────────────── -->
-  <div class="page active" id="page-campaigns">
+  <div class="page" id="page-campaigns">
     <div class="section-header">
       <h2 class="section-title">Campaigns</h2>
       <button class="btn btn-primary" onclick="openCampaignModal()">
@@ -1553,7 +1662,47 @@ async function refreshOrdersOnly() {
 }
 
 
-// ── Init ──────────────────────────────────────────────────────────────────────
+
+// ── Home page ─────────────────────────────────────────────────────────────────
+async function loadHome() {
+  // Personalized greeting
+  const hour = new Date().getHours();
+  const greeting = hour < 12 ? 'Bom dia' : hour < 18 ? 'Boa tarde' : 'Boa noite';
+  fetch('/me').then(r=>r.json()).then(user => {
+    const el = document.getElementById('home-greeting');
+    if (el && user.name) el.textContent = greeting + ', ' + user.name.split(' ')[0] + '! 👋';
+  }).catch(()=>{});
+
+  // Quick stats
+  try {
+    const [summary, convResp] = await Promise.all([
+      api('GET', '/orders/summary').catch(()=>null),
+      api('GET', '/bot-api/stats').catch(()=>null),
+    ]);
+    const stats = [
+      { icon:'💰', label:'Receita Hoje', value: summary ? brl(summary.paid_total||0) : 'R$ —', color:'var(--success)' },
+      { icon:'📦', label:'Pedidos Hoje', value: summary ? (summary.total_orders||0) : '—', color:'var(--accent)' },
+      { icon:'💬', label:'Mensagens', value: convResp ? (convResp.totalMessages||0).toLocaleString('pt-BR') : '—', color:'var(--purple)' },
+      { icon:'👥', label:'Contatos', value: convResp ? (convResp.totalContacts||0) : '—', color:'var(--warning)' },
+    ];
+    const el = document.getElementById('home-stats');
+    if (el) el.innerHTML = stats.map(s =>
+      '<div style="background:var(--bg-2);border:1px solid var(--border);border-radius:10px;padding:16px 18px;box-shadow:0 1px 3px rgba(0,0,0,.05)">' +
+        '<div style="font-size:18px;margin-bottom:6px">'+s.icon+'</div>' +
+        '<div style="font-size:20px;font-weight:800;color:'+s.color+';letter-spacing:-.5px">'+s.value+'</div>' +
+        '<div style="font-size:11px;color:var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-top:3px">'+s.label+'</div>' +
+      '</div>'
+    ).join('');
+  } catch {}
+}
+
+
+// ── Init ──
+// Load home page on first visit
+(function() {
+  const pg = document.getElementById('page-home');
+  if (pg && pg.classList.contains('active')) loadHome();
+})();────────────────────────────────────────────────────────────────────
 loadCampaigns();
 
 // ── User session ──────────────────────────────────────────────────────────────
@@ -1592,24 +1741,6 @@ fetch('/me').then(r=>r.json()).then(user=>{
   </div>
 </div>
 
-      <button class="modal-close" onclick="closeWooviModal()">×</button>
-    </div>
-    <div class="modal-body" style="padding:22px">
-      <div style="background:var(--bg-3);border-radius:10px;padding:14px;margin-bottom:18px;font-size:12px;color:var(--text-muted);line-height:1.7">
-        📋 Configure o webhook no painel da Woovi:<br>
-        <code style="background:var(--bg-4);padding:2px 6px;border-radius:4px;color:var(--accent)">/api/webhooks/woovi</code>
-        <br>A confirmação de pagamentos é automática via webhook.
-      </div>
-      <div style="margin-bottom:14px"><label class="form-label">App ID Woovi</label><input type="text" id="woovi-app-id-cfg" class="form-input" placeholder="Client_Id_xxx:Client_Secret_xxx"></div>
-      <div style="background:var(--success-bg);border:1px solid rgba(22,163,74,.2);border-radius:8px;padding:11px 14px;font-size:12px;color:var(--success);margin-top:4px">
-        ✅ Configure este App ID nos seus links de pagamento para rastrear pedidos pagos hoje
-      </div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn btn-secondary" onclick="closeWooviModal()">Fechar</button>
-    </div>
-  </div>
-</div>
 <div id="toast-container" style="position:fixed;bottom:20px;right:20px;z-index:9999;display:flex;flex-direction:column;gap:8px;pointer-events:none"></div>
 </body>
 </html>
