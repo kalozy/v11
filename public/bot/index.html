@@ -115,7 +115,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 
 /* FLOWS */
 .flows-wrap{display:flex;flex:1;overflow:hidden}
-.fl-list{width:250px;flex-shrink:0;border-right:1px solid var(--border);overflow-y:auto;background:#fafaf9}
+.fl-list{width:340px;flex-shrink:0;border-right:1px solid var(--border);overflow-y:auto;background:#fafaf9}
 .fl-head{padding:12px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
 .fl-card{padding:10px 12px;border-bottom:1px solid var(--border);cursor:pointer;transition:.12s;position:relative}
 .fl-card:hover{background:var(--bg3)}
@@ -160,10 +160,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 
 /* CONVERSATIONS */
 .conv-wrap{display:flex;flex:1;overflow:hidden}
-.cv-list{width:280px;flex-shrink:0;border-right:1px solid var(--border);overflow-y:auto;background:#fafaf9;display:flex;flex-direction:column}
-.cv-search-wrap{padding:10px;border-bottom:1px solid var(--border);flex-shrink:0}
-.cv-search{width:100%;padding:7px 10px;border:1px solid var(--border);border-radius:var(--r);background:#fff;color:var(--text);font-size:12px;outline:none}
-.cv-search:focus{border-color:var(--green)}
+.cv-list{width:360px;flex-shrink:0;border-right:1px solid var(--border);overflow-y:auto;background:#fafaf9;display:flex;flex-direction:column}
 .cv-items{flex:1;overflow-y:auto}
 .cv-item{padding:12px;border-bottom:1px solid var(--border);cursor:pointer;transition:.12s;display:flex;gap:10px;align-items:center}
 .cv-item:hover{background:var(--bg3)}
@@ -493,7 +490,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
     <div class="page" id="page-conversations">
       <div class="conv-wrap">
         <div class="cv-list">
-          <div class="cv-search-wrap"><input class="cv-search" id="cv-search" placeholder="🔍 Buscar..."></div>
+          
           <div class="cv-items" id="cv-items"></div>
         </div>
         <div class="cv-chat" id="cv-chat">
@@ -844,7 +841,7 @@ async function refreshDashboard(){
     ]);
     statsData = stats;
     flowsData = flows;
-    _s('s-flows', (flows.flows||[]).filter(f=>f.active!==false).length);
+    { const e=document.getElementById('s-flows'); if(e) e.textContent=(flows.flows||[]).filter(f=>f.active!==false).length; }
     document.getElementById('sb-name').textContent = flows.botName||'MeuBot';
     renderStats(stats);
     renderRecentMsgs();
@@ -1138,7 +1135,7 @@ async function deleteConv(jid){
   toast('Conversa excluída','inf');
 }
 
-document.getElementById('cv-search').addEventListener('input', function(){
+(document.getElementById('cv-search')||{addEventListener:()=>{}}).addEventListener('input', function(){
   const q = this.value.toLowerCase();
   renderConvList(q ? conversations.filter(c=>c.contact.toLowerCase().includes(q)||( c.lastMsg||'').toLowerCase().includes(q)) : conversations);
 });
